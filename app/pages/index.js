@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
-import {Container, ButtonOutline, Heading, Donut, Lead} from 'rebass'
+import {Container, ButtonOutline, Heading, Donut, Lead} from 'rebass';
+
 class App extends Component {
     constructor() {
         super();
@@ -16,13 +17,10 @@ class App extends Component {
     }
 
     _downloadRequest() {
-        const {isRunning} = this.state;
-
-        if (isRunning) return;
-
         console.log('sendRequest');
 
         const xhr = new XMLHttpRequest();
+
         xhr.open('GET', '/api/download', true);
 
         xhr.onerror = () => {
@@ -66,16 +64,15 @@ class App extends Component {
     }
 
     _uploadRequest() {
-        const {isRunning} = this.state;
-
-        if (isRunning) return;
-
         console.log('sendRequest');
 
+        const uploadBytes = 30 * 1024 * 1024;
+
         const xhr = new XMLHttpRequest();
+
         xhr.open('POST', '/api/upload', true);
 
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
         xhr.onerror = () => {
             console.log('onerror');
@@ -87,7 +84,7 @@ class App extends Component {
             this.setState({
                 isRunning: true,
                 started: Date.now(),
-                allBytes: 30 * 1024 * 1024
+                allBytes: uploadBytes
             });
         };
 
@@ -106,16 +103,16 @@ class App extends Component {
             console.log('onloadend');
 
             this.setState({
-                bytesDownloaded: 30 * 1024 * 1024,
                 isRunning: false
             });
         };
 
-        xhr.send(new ArrayBuffer(30 * 1024 * 1024));
+        xhr.send(new ArrayBuffer(uploadBytes));
     }
 
     render() {
-        const {isRunning, started: startedAt, ended: endedAt, bytesDownloaded, allBytes, error} = this.state;
+        const {isRunning, started: startedAt, ended: endedAt, bytesDownloaded, allBytes} = this.state;
+
         return (
             <Container>
                 <Wrapper>
@@ -125,15 +122,11 @@ class App extends Component {
 
                     <ButtonWrap>
                         <Button disabled={isRunning} onClick={() => {
-                            console.log('onClick');
-
                             this._downloadRequest();
                         }}>Check Download Speed
                         </Button>
 
                         <Button disabled={isRunning} onClick={() => {
-                            console.log('onClick');
-
                             this._uploadRequest();
                         }}>Check Upload Speed
                         </Button>
@@ -150,35 +143,33 @@ class App extends Component {
                                color="#2a6044"
                                value={_.ceil(bytesDownloaded / allBytes * 100) / 100 || 0}
                         >
-
                         </Donut>
+
                         <Progress>
                             {_.ceil(bytesDownloaded / allBytes * 100) || 0}%
                         </Progress>
                     </ProgressWrapper>
-
                 </Wrapper>
             </Container>
         )
     }
 }
 
-
 const Wrapper = styled.div` 
     margin: 0px auto;
-`
+`;
 
 const ProgressWrapper = styled.div`
     width: 256px;
     height: 256px;
     position: relative;
     margin: 0px auto;
-`
+`;
 
 const Speed = styled(Lead)`
     text-align: center;
     padding: 20px;
-`
+`;
 
 const Progress = styled.div`
     width: 256px;
@@ -190,7 +181,7 @@ const Progress = styled.div`
     justify-content: center;
     font-size: 36px;
     
-`
+`;
 
 const Button = styled(ButtonOutline)`
     margin: 0px 20px;
@@ -213,7 +204,7 @@ const Button = styled(ButtonOutline)`
        padding: 10px;
        margin: 5px 0px  ;
     }
-`
+`;
 
 const ButtonWrap = styled.div`
     display: flex;
@@ -221,8 +212,7 @@ const ButtonWrap = styled.div`
     @media (max-width: 667px) {
        flex-direction: column;
     }
-`
-
+`;
 
 const Header = styled(Heading)`
     color: #1c1c1c;
@@ -230,6 +220,6 @@ const Header = styled(Heading)`
     margin: 10px 0px;
     text-transform: uppercase;
     text-align:center;
-`
+`;
 
 export default App;
