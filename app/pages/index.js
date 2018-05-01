@@ -96,6 +96,8 @@ class App extends Component {
         };
 
         xhr.upload.addEventListener('progress', (event) => {
+            console.log('onprogress', event.loaded);
+
             if (event.lengthComputable) {
                 this.setState({
                     bytesDownloaded: event.loaded,

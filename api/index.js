@@ -26,7 +26,7 @@ router.get('/download', async (req, res, next) => {
 
     const readable = new CustomReadable({
         fileSize: 30 * 1024 * 1024,
-        simulatedSpeed: 1024
+        //simulatedSpeed: 128
     });
 
     readable.pipe(res);
@@ -37,7 +37,7 @@ router.post('/upload', (req, res, next) => {
 
     const writable = new CustomWritable({
         fileSize: 30 * 1024 * 1024,
-        simulatedSpeed: 1024
+        //simulatedSpeed: 128
     });
 
     req.pipe(writable);
