@@ -6,6 +6,7 @@ import App from './pages/index';
 import normalize from 'styled-normalize';
 import {ThemeProvider} from 'styled-components';
 import {theme} from './theme';
+import {Provider} from 'rebass'
 
 const appElement = document.createElement('div');
 appElement.setAttribute('id', 'app');
@@ -14,16 +15,20 @@ document.body.appendChild(appElement);
 injectGlobal`
  @import url('https://fonts.googleapis.com/css?family=Open+Sans&subset=cyrillic');
   * {
-    font-family: 'Open Sans', sans-serif;
+  
+    box-sizing: border-box; }
+    body { margin: 0;
   }
   ${normalize}
 `;
 
 ReactDOM.render(
     <BrowserRouter>
-        <ThemeProvider theme={theme}>
-            <App/>
-        </ThemeProvider>
+        <Provider>
+            <ThemeProvider theme={theme}>
+                <App/>
+            </ThemeProvider>
+        </Provider>
     </BrowserRouter>,
     document.getElementById('app'),
 );

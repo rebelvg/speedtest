@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
-
+import {Container, ButtonOutline, Heading, Donut, Lead} from 'rebass'
 class App extends Component {
     constructor() {
         super();
@@ -11,12 +11,8 @@ class App extends Component {
             started: 0,
             ended: 0,
             bytesDownloaded: 0,
-            allBytes: 0
+            allBytes: 0,
         };
-    }
-
-    componentDidMount() {
-        //api stuff here
     }
 
     _downloadRequest() {
@@ -119,63 +115,121 @@ class App extends Component {
     }
 
     render() {
-        const {isRunning, started: startedAt, ended: endedAt, bytesDownloaded, allBytes} = this.state;
-
-        if (isRunning) {
-            return <div>
-                <Container>
-                    Speedtest
-                </Container>
-
-                <br/>
-
-                <div>
-                    Speed - {_.round(bytesDownloaded / 1024 / 1024 * 8 / (Date.now() - startedAt) * 1000, 2)} mbps
-                </div>
-                <div>
-                    Progress - {_.ceil(bytesDownloaded / allBytes * 100)}%
-                </div>
-            </div>
-        }
-
+        const {isRunning, started: startedAt, ended: endedAt, bytesDownloaded, allBytes, error} = this.state;
         return (
-            <div>
-                <Container>
-                    Speedtest
-                </Container>
+            <Container>
+                <Wrapper>
+                    <Header>
+                        Speedtest
+                    </Header>
 
-                <br/>
+                    <ButtonWrap>
+                        <Button disabled={isRunning} onClick={() => {
+                            console.log('onClick');
 
-                <div>
-                    Speed - {_.round(bytesDownloaded / 1024 / 1024 * 8 / (Date.now() - startedAt) * 1000, 2)} mbps
-                </div>
-                <div>
-                    Progress - {_.ceil(bytesDownloaded / allBytes * 100)}%
-                </div>
+                            this._downloadRequest();
+                        }}>Check Download Speed
+                        </Button>
 
-                <br/>
+                        <Button disabled={isRunning} onClick={() => {
+                            console.log('onClick');
 
-                <button onClick={() => {
-                    console.log('onClick');
+                            this._uploadRequest();
+                        }}>Check Upload Speed
+                        </Button>
+                    </ButtonWrap>
 
-                    this._downloadRequest();
-                }}>Download!
-                </button>
+                    <Speed>
+                        Speed - {_.round(bytesDownloaded / 1024 / 1024 * 8 / (Date.now() - startedAt) * 1000, 2) || 0}
+                        mbps
+                    </Speed>
 
-                <button onClick={() => {
-                    console.log('onClick');
+                    <ProgressWrapper>
+                        <Donut strokeWidth={3}
+                               size={256}
+                               color="#2a6044"
+                               value={_.ceil(bytesDownloaded / allBytes * 100) / 100 || 0}
+                        >
 
-                    this._uploadRequest();
-                }}>Upload!
-                </button>
-            </div>
+                        </Donut>
+                        <Progress>
+                            {_.ceil(bytesDownloaded / allBytes * 100) || 0}%
+                        </Progress>
+                    </ProgressWrapper>
+
+                </Wrapper>
+            </Container>
         )
     }
 }
 
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-`;
+
+const Wrapper = styled.div` 
+    margin: 0px auto;
+`
+
+const ProgressWrapper = styled.div`
+    width: 256px;
+    height: 256px;
+    position: relative;
+    margin: 0px auto;
+`
+
+const Speed = styled(Lead)`
+    text-align: center;
+    padding: 20px;
+`
+
+const Progress = styled.div`
+    width: 256px;
+    height: 256px;
+    display: flex;
+    position: absolute;
+    top: 0px;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    
+`
+
+const Button = styled(ButtonOutline)`
+    margin: 0px 20px;
+    padding: 20px;
+    width: 25%;
+    color: ${props => props.theme.primary};
+   
+    &:disabled:hover {
+        background-color: white; 
+        box-shadow: inset 0 0 0 2px;
+        color: ${props => props.theme.primary}; 
+    }
+    &:hover {
+        color: ${props => props.theme.light};
+        background-color: ${props => props.theme.primary};
+    }
+    
+    @media (max-width: 667px) {
+       width: 100%;
+       padding: 10px;
+       margin: 5px 0px  ;
+    }
+`
+
+const ButtonWrap = styled.div`
+    display: flex;
+    justify-content: center;
+    @media (max-width: 667px) {
+       flex-direction: column;
+    }
+`
+
+
+const Header = styled(Heading)`
+    color: #1c1c1c;
+    font-size: 2em;
+    margin: 10px 0px;
+    text-transform: uppercase;
+    text-align:center;
+`
 
 export default App;

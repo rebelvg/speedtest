@@ -9,7 +9,7 @@
     "start-api": "node api",
     "start-app": "./node_modules/.bin/webpack-dev-server --mode development",
     "start": "concurrently --kill-others \"yarn run start-api\" \"yarn run start-app\"",
-    "build": "./node_modules/.bin/webpack --config webpack.config.production"
+    "build": "./node_modules/.bin/webpack --config webpack.config.production --mode production"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -51,6 +51,7 @@
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "rebass": "^1.0.7",
     "request": "^2.85.0"
   }
 }

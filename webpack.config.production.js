@@ -1,6 +1,6 @@
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
     entry: './app/index.js',
@@ -10,7 +10,7 @@ module.exports = {
                 test: /.js/,
                 exclude: /node_modules/,
                 include: [
-                    path.resolve(__dirname, 'src'),
+                    path.resolve(__dirname, 'app'),
                 ],
                 use: {
                     loader: 'babel-loader',
@@ -43,7 +43,7 @@ module.exports = {
     devtool: 'source-map',
     resolve: {
         alias: {
-            src: path.resolve(__dirname, './src'),
+            app: path.resolve(__dirname, './app'),
         },
     },
     output: {
@@ -51,4 +51,4 @@ module.exports = {
         publicPath: '/',
         path: path.resolve(__dirname, 'dist')
     }
-};
+}
