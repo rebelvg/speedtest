@@ -21,7 +21,7 @@ class App extends Component {
 
         const xhr = new XMLHttpRequest();
 
-        xhr.open('GET', '/api/download', true);
+        xhr.open('GET', 'api/download', true);
 
         xhr.onerror = () => {
             console.log('onerror');
@@ -70,7 +70,7 @@ class App extends Component {
 
         const xhr = new XMLHttpRequest();
 
-        xhr.open('POST', '/api/upload', true);
+        xhr.open('POST', 'api/upload', true);
 
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -133,8 +133,7 @@ class App extends Component {
                     </ButtonWrap>
 
                     <Speed>
-                        Speed - {_.round(bytesDownloaded / 1024 / 1024 * 8 / (Date.now() - startedAt) * 1000, 2) || 0}
-                        mbps
+                        {`Speed - ${_.round(bytesDownloaded / 1024 / 1024 * 8 / (Date.now() - startedAt) * 1000, 2) || 0} mbps`}
                     </Speed>
 
                     <ProgressWrapper>
