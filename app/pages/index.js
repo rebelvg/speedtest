@@ -19,7 +19,7 @@ class App extends Component {
         //api stuff here
     }
 
-    _makeRequest() {
+    _downloadRequest() {
         const {isRunning} = this.state;
 
         if (isRunning) return;
@@ -69,6 +69,53 @@ class App extends Component {
         xhr.send();
     }
 
+    _uploadRequest() {
+        const {isRunning} = this.state;
+
+        if (isRunning) return;
+
+        console.log('sendRequest');
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/upload', true);
+
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xhr.onerror = () => {
+            console.log('onerror');
+        };
+
+        xhr.onloadstart = () => {
+            console.log('onloadstart');
+
+            this.setState({
+                isRunning: true,
+                started: Date.now(),
+                allBytes: 30 * 1024 * 1024
+            });
+        };
+
+        xhr.upload.addEventListener('progress', (event) => {
+            if (event.lengthComputable) {
+                this.setState({
+                    bytesDownloaded: event.loaded,
+                    allBytes: event.total
+                });
+            }
+        });
+
+        xhr.onloadend = () => {
+            console.log('onloadend');
+
+            this.setState({
+                bytesDownloaded: 30 * 1024 * 1024,
+                isRunning: false
+            });
+        };
+
+        xhr.send(new ArrayBuffer(30 * 1024 * 1024));
+    }
+
     render() {
         const {isRunning, started: startedAt, ended: endedAt, bytesDownloaded, allBytes} = this.state;
 
@@ -109,8 +156,15 @@ class App extends Component {
                 <button onClick={() => {
                     console.log('onClick');
 
-                    this._makeRequest();
-                }}>Run!
+                    this._downloadRequest();
+                }}>Download!
+                </button>
+
+                <button onClick={() => {
+                    console.log('onClick');
+
+                    this._uploadRequest();
+                }}>Upload!
                 </button>
             </div>
         )
