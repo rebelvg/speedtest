@@ -18,7 +18,7 @@ class App extends Component {
     }
 
     _downloadRequest() {
-        console.log('sendRequest');
+        console.log('_downloadRequest');
 
         const xhr = new XMLHttpRequest();
 
@@ -51,7 +51,7 @@ class App extends Component {
             console.log('onloadend');
 
             this.setState({
-                updated: Date.now(),
+                //updated: Date.now(),
                 ended: Date.now(),
                 isRunning: false
             });
@@ -69,7 +69,7 @@ class App extends Component {
     }
 
     _uploadRequest() {
-        console.log('sendRequest');
+        console.log('_uploadRequest');
 
         const uploadBytes = 30 * 1024 * 1024;
 
@@ -110,7 +110,7 @@ class App extends Component {
             console.log('onloadend');
 
             this.setState({
-                updated: Date.now(),
+                //updated: Date.now(),
                 ended: Date.now(),
                 isRunning: false
             });
