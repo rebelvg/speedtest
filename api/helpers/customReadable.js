@@ -10,17 +10,19 @@ class CustomReadable extends Readable {
         this.simulatedSpeed = simulatedSpeed;
     }
 
+    _pushBytes(bytes) {
+        if (bytes > this.fileSize) {
+            this.push(Buffer.alloc(this.fileSize, 0x00));
+        } else {
+            this.push(Buffer.alloc(bytes, 0x00));
+        }
+
+        this.fileSize -= bytes;
+    }
+
     _read(bytes) {
         if (this.fileSize > 0) {
-            setTimeout(() => {
-                if (bytes > this.fileSize) {
-                    this.push(Buffer.alloc(this.fileSize, 0x00));
-                } else {
-                    this.push(Buffer.alloc(bytes, 0x00));
-                }
-
-                this.fileSize -= bytes;
-            }, 1000 / this.simulatedSpeed * bytes / 1024);
+            this.simulatedSpeed === Infinity ? this._pushBytes(bytes) : setTimeout(() => this._pushBytes(bytes), 1000 / this.simulatedSpeed * bytes / 1024);
         } else {
             this.push(null);
         }

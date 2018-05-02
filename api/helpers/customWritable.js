@@ -12,7 +12,7 @@ class CustomWritable extends Writable {
 
     _write(chunk, encoding, callback) {
         if (this.fileSize > 0) {
-            setTimeout(callback, 1000 / this.simulatedSpeed * chunk.length / 1024);
+            this.simulatedSpeed === Infinity ? callback() : setTimeout(callback, 1000 / this.simulatedSpeed * chunk.length / 1024);
 
             this.fileSize -= chunk.length;
         } else {
