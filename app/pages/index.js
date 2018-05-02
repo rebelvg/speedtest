@@ -10,6 +10,7 @@ class App extends Component {
         this.state = {
             isRunning: false,
             started: 0,
+            updated: 0,
             ended: 0,
             bytesDownloaded: 0,
             allBytes: 0,
@@ -32,7 +33,8 @@ class App extends Component {
 
             this.setState({
                 isRunning: true,
-                started: Date.now()
+                started: Date.now(),
+                updated: Date.now()
             });
         };
 
@@ -40,7 +42,8 @@ class App extends Component {
             console.log('onprogress', xhr.response.length);
 
             this.setState({
-                bytesDownloaded: xhr.response.length
+                bytesDownloaded: xhr.response.length,
+                updated: Date.now()
             });
         };
 
@@ -48,6 +51,8 @@ class App extends Component {
             console.log('onloadend');
 
             this.setState({
+                updated: Date.now(),
+                ended: Date.now(),
                 isRunning: false
             });
         };
@@ -84,6 +89,7 @@ class App extends Component {
             this.setState({
                 isRunning: true,
                 started: Date.now(),
+                updated: Date.now(),
                 allBytes: uploadBytes
             });
         };
@@ -94,6 +100,7 @@ class App extends Component {
             if (event.lengthComputable) {
                 this.setState({
                     bytesDownloaded: event.loaded,
+                    updated: Date.now(),
                     allBytes: event.total
                 });
             }
@@ -103,6 +110,8 @@ class App extends Component {
             console.log('onloadend');
 
             this.setState({
+                updated: Date.now(),
+                ended: Date.now(),
                 isRunning: false
             });
         };
@@ -111,7 +120,7 @@ class App extends Component {
     }
 
     render() {
-        const {isRunning, started: startedAt, ended: endedAt, bytesDownloaded, allBytes} = this.state;
+        const {isRunning, started: startedAt, updated: updatedAt, bytesDownloaded, allBytes} = this.state;
 
         return (
             <Container>
@@ -133,14 +142,14 @@ class App extends Component {
                     </ButtonWrap>
 
                     <Speed>
-                        {`Speed - ${_.round(bytesDownloaded / 1024 / 1024 * 8 / (Date.now() - startedAt) * 1000, 2) || 0} mbps`}
+                        {`Speed - ${_.round(bytesDownloaded / 1024 / 1024 * 8 / (updatedAt - startedAt) * 1000, 2) || 0} mbps`}
                     </Speed>
 
                     <ProgressWrapper>
                         <Donut strokeWidth={3}
                                size={256}
                                color="#2a6044"
-                               value={_.ceil(bytesDownloaded / allBytes * 100) / 100 || 0}
+                               value={bytesDownloaded / allBytes || 0}
                         >
                         </Donut>
 
