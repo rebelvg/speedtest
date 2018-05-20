@@ -15,8 +15,6 @@ app.set('trust proxy', true);
 const router = express.Router();
 
 router.get('/download', async (req, res, next) => {
-    console.log('http download');
-
     res.writeHead(200, {
         'Content-Type': 'application/octet-stream',
         'Content-Disposition': 'attachment; filename=binary',
@@ -33,8 +31,6 @@ router.get('/download', async (req, res, next) => {
 });
 
 router.post('/upload', (req, res, next) => {
-    console.log('http upload');
-
     const writable = new CustomWritable({
         fileSize: 30 * 1024 * 1024,
         //simulatedSpeed: 128
