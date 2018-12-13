@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
-import {injectGlobal} from 'styled-components';
+import { BrowserRouter } from 'react-router-dom';
+import { injectGlobal } from 'styled-components';
 import App from './pages/index';
 import normalize from 'styled-normalize';
-import {ThemeProvider} from 'styled-components';
-import {theme} from './theme';
-import {Provider} from 'rebass'
+import { ThemeProvider } from 'styled-components';
+import { theme } from './theme';
+import { Provider } from 'rebass';
 
 const appElement = document.createElement('div');
 appElement.setAttribute('id', 'app');
@@ -23,12 +23,12 @@ injectGlobal`
 `;
 
 ReactDOM.render(
-    <BrowserRouter>
-        <Provider>
-            <ThemeProvider theme={theme}>
-                <App/>
-            </ThemeProvider>
-        </Provider>
-    </BrowserRouter>,
-    document.getElementById('app'),
+  <BrowserRouter>
+    <Provider>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </Provider>
+  </BrowserRouter>,
+  document.getElementById('app')
 );

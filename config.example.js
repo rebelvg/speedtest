@@ -1,10 +1,10 @@
 module.exports = {
   app: {
-    host: "localhost",
+    host: 'localhost',
     port: 3000
   },
   api: {
-    host: "localhost",
+    host: 'localhost',
     port: 8000
   }
 };
