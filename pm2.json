@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "klpq-speedtest",
+      "name": "speedtest",
       "script": "api/index.js",
       "log_date_format": "YYYY-MM-DD HH:mm:ss.SSS Z"
     }
