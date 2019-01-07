@@ -9,7 +9,9 @@
     "app"
   ],
   "scripts": {
-    "prepush": "prettier --write \"**/*.js\"",
+    "prepush": "yarn run lint",
+    "lint": "prettier --list-different \"**/*.{ts,js,json,css,md}\"",
+    "lint:fix": "prettier --write \"**/*.{ts,js,json,css,md}\"",
     "build:app": "webpack --config webpack.config.production --mode production",
     "start:api": "yarn workspace api start",
     "start:app": "webpack-dev-server --mode development",
