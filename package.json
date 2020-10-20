@@ -14,7 +14,7 @@
     "lint:fix": "prettier --write \"**/*.{ts,js,json,css,md}\"",
     "build:app": "webpack --config webpack.config.production --mode production",
     "start:api": "yarn workspace api start",
-    "start:app": "webpack-dev-server --mode development",
+    "start:app": "yarn workspace app start",
     "start": "concurrently --kill-others \"yarn run start:api\" \"yarn run start:app\""
   },
   "devDependencies": {
