@@ -1,40 +1,47 @@
+import * as fs from 'fs';
 import { assert } from 'chai';
-import { Readable } from 'stream';
-import { CustomWritable } from './custom-writable';
+import { CustomReadable } from './custom-readable';
+import { Writable } from 'stream';
 
-describe('CustomWritable integration test', () => {
-  context('when CustomWritable simulated speed is not set', () => {
+describe('CustomReadable integration test', () => {
+  class TestWritable extends Writable {
+    public _write(chunk: Buffer, encoding: string, callback: (error?: Error) => void) {
+      callback();
+    }
+  }
+
+  context('when CustomReadable simulated speed is not set', () => {
     const fileSize = 30 * 1024 * 1024;
 
     const startTime = new Date();
     let endTime: Date;
 
     before(async () => {
-      const readable = Readable.from(Buffer.alloc(fileSize));
+      const writable = new TestWritable();
 
-      const writable = new CustomWritable({
+      const readable = new CustomReadable({
         fileSize,
       });
 
       readable.pipe(writable);
 
       await new Promise((resolve, reject) => {
-        writable.on('error', reject);
+        readable.on('error', reject);
 
-        writable.on('finish', resolve);
+        readable.on('end', resolve);
       });
 
       endTime = new Date();
     });
 
-    it('should write as expected', () => {
+    it('should read as expected', () => {
       const testTime = endTime.valueOf() - startTime.valueOf();
 
       assert.isBelow(testTime, 1 * 1000);
     });
   });
 
-  context('when CustomWritable simulated speed is set', function() {
+  context('when CustomReadable simulated speed is set', function() {
     const timeout = 10 * 1000;
 
     this.timeout(timeout);
@@ -45,9 +52,9 @@ describe('CustomWritable integration test', () => {
     let endTime: Date;
 
     before(async () => {
-      const readable = Readable.from(Buffer.alloc(fileSize));
+      const writable = new TestWritable();
 
-      const writable = new CustomWritable({
+      const readable = new CustomReadable({
         fileSize,
         simulatedSpeed: 128,
       });
@@ -55,15 +62,15 @@ describe('CustomWritable integration test', () => {
       readable.pipe(writable);
 
       await new Promise((resolve, reject) => {
-        writable.on('error', reject);
+        readable.on('error', reject);
 
-        writable.on('finish', resolve);
+        readable.on('end', resolve);
       });
 
       endTime = new Date();
     });
 
-    it('should write as expected', () => {
+    it('should read as expected', () => {
       const testTime = endTime.valueOf() - startTime.valueOf();
 
       assert.isAbove(testTime, 7 * 1000);
