@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import * as _ from 'lodash';
 import { Container, ButtonOutline, Heading, Donut, Lead } from 'rebass';
 
-export class App extends Component {
+export class Home extends Component {
   public state = { isRunning: false, started: 0, updated: 0, ended: 0, bytesDownloaded: 0, allBytes: 0 };
 
   private _downloadRequest() {

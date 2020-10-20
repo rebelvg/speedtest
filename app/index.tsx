@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { injectGlobal } from 'styled-components';
-import { App } from './pages';
+import { Home } from './pages/home';
 import normalize from 'styled-normalize';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme';
@@ -26,7 +26,7 @@ ReactDOM.render(
   <BrowserRouter>
     <Provider>
       <ThemeProvider theme={theme}>
-        <App />
+        <Home />
       </ThemeProvider>
     </Provider>
   </BrowserRouter>,
