@@ -8,10 +8,15 @@ module.exports = {
     'react-hot-loader/patch',
     `webpack-dev-server/client?http://${config.app.host}:${config.app.port}`,
     'webpack/hot/only-dev-server',
-    'app/index.js',
+    'app/index.tsx',
   ],
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
       {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
@@ -75,6 +80,7 @@ module.exports = {
     ],
   },
   resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
     alias: {
       app: path.resolve(__dirname, './app'),
     },

@@ -2,6 +2,7 @@
   "name": "app",
   "version": "1.0.0",
   "devDependencies": {
+    "@types/react": "^16.9.53",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-plugin-react-html-attrs": "^2.1.0",
@@ -33,6 +34,7 @@
     "request": "^2.85.0",
     "style-loader": "^0.20.2",
     "styled-components": "^3.2.1",
-    "styled-normalize": "^4.0.0"
+    "styled-normalize": "^4.0.0",
+    "ts-loader": "^8.0.6"
   }
 }

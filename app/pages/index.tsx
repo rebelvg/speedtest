@@ -1,23 +1,12 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { Container, ButtonOutline, Heading, Donut, Lead } from 'rebass';
 
-class App extends Component {
-  constructor() {
-    super();
+export class App extends Component {
+  public state = { isRunning: false, started: 0, updated: 0, ended: 0, bytesDownloaded: 0, allBytes: 0 };
 
-    this.state = {
-      isRunning: false,
-      started: 0,
-      updated: 0,
-      ended: 0,
-      bytesDownloaded: 0,
-      allBytes: 0,
-    };
-  }
-
-  _downloadRequest() {
+  private _downloadRequest() {
     console.log('_downloadRequest');
 
     const xhr = new XMLHttpRequest();
@@ -68,7 +57,7 @@ class App extends Component {
     xhr.send();
   }
 
-  _uploadRequest() {
+  private _uploadRequest() {
     console.log('_uploadRequest');
 
     const uploadBytes = 30 * 1024 * 1024;
@@ -119,7 +108,7 @@ class App extends Component {
     xhr.send(new ArrayBuffer(uploadBytes));
   }
 
-  render() {
+  public render() {
     const { isRunning, started: startedAt, updated: updatedAt, bytesDownloaded, allBytes } = this.state;
 
     return (
@@ -228,5 +217,3 @@ const Header = styled(Heading)`
   text-transform: uppercase;
   text-align: center;
 `;
-
-export default App;

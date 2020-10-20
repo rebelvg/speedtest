@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { injectGlobal } from 'styled-components';
-import App from './pages/index';
+import { App } from './pages';
 import normalize from 'styled-normalize';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme';
@@ -15,7 +15,7 @@ document.body.appendChild(appElement);
 injectGlobal`
  @import url('https://fonts.googleapis.com/css?family=Open+Sans&subset=cyrillic');
   * {
-  
+
     box-sizing: border-box; }
     body { margin: 0;
   }

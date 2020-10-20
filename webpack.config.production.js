@@ -3,9 +3,14 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './app/index.js',
+  entry: './app/index.tsx',
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
       {
         test: /.js/,
         exclude: /node_modules/,
@@ -32,6 +37,7 @@ module.exports = {
   plugins: [new HtmlWebpackPlugin()],
   devtool: 'source-map',
   resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
     alias: {
       app: path.resolve(__dirname, './app'),
     },
