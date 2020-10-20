@@ -12,18 +12,6 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /.js/,
-        exclude: /node_modules/,
-        include: [path.resolve(__dirname, 'app')],
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env', 'stage-0', 'react'],
-            plugins: ['transform-class-properties', 'react-html-attrs', 'transform-decorators-legacy'],
-          },
-        },
-      },
-      {
         test: /\.css$/,
         loader: 'style-loader!css-loader',
       },

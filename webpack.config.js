@@ -18,34 +18,6 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(js|jsx)$/,
-        exclude: /(node_modules|bower_components)/,
-        include: [path.resolve(__dirname, 'app')],
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              [
-                'env',
-                {
-                  targets: {
-                    browsers: ['last 2 Chrome versions'],
-                  },
-                },
-              ],
-              'react',
-              'stage-0',
-            ],
-            plugins: [
-              'transform-class-properties',
-              'react-html-attrs',
-              'transform-decorators-legacy',
-              'transform-async-to-generator',
-            ],
-          },
-        },
-      },
-      {
         test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/,
         loader: 'file-loader',
       },
