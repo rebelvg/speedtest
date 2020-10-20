@@ -6,10 +6,12 @@ describe('CustomWritable integration test', () => {
   context('when CustomWritable simulated speed is not set', () => {
     const fileSize = 30 * 1024 * 1024;
 
-    const startTime = new Date();
+    let startTime: Date;
     let endTime: Date;
 
     before(async () => {
+      startTime = new Date();
+
       const readable = Readable.from(Buffer.alloc(fileSize));
 
       const writable = new CustomWritable({
@@ -41,10 +43,12 @@ describe('CustomWritable integration test', () => {
 
     const fileSize = 1 * 1024 * 1024;
 
-    const startTime = new Date();
+    let startTime: Date;
     let endTime: Date;
 
     before(async () => {
+      startTime = new Date();
+
       const readable = Readable.from(Buffer.alloc(fileSize));
 
       const writable = new CustomWritable({

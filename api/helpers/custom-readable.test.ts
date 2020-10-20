@@ -12,10 +12,12 @@ describe('CustomReadable integration test', () => {
   context('when CustomReadable simulated speed is not set', () => {
     const fileSize = 30 * 1024 * 1024;
 
-    const startTime = new Date();
+    let startTime: Date;
     let endTime: Date;
 
     before(async () => {
+      startTime = new Date();
+
       const writable = new TestWritable();
 
       const readable = new CustomReadable({
@@ -47,10 +49,12 @@ describe('CustomReadable integration test', () => {
 
     const fileSize = 1 * 1024 * 1024;
 
-    const startTime = new Date();
+    let startTime: Date;
     let endTime: Date;
 
     before(async () => {
+      startTime = new Date();
+
       const writable = new TestWritable();
 
       const readable = new CustomReadable({
