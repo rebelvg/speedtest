@@ -3,10 +3,6 @@ import { Readable } from 'stream';
 import { CustomWritable } from './custom-writable';
 
 describe('CustomWritable integration test', () => {
-  before(() => {});
-
-  after(() => {});
-
   context('when CustomWritable simulated speed is not set', () => {
     const fileSize = 30 * 1024 * 1024;
 
@@ -30,8 +26,6 @@ describe('CustomWritable integration test', () => {
 
       endTime = new Date();
     });
-
-    after(() => {});
 
     it('should write as expected', () => {
       const testTime = endTime.valueOf() - startTime.valueOf();
@@ -68,8 +62,6 @@ describe('CustomWritable integration test', () => {
 
       endTime = new Date();
     });
-
-    after(() => {});
 
     it('should write as expected', () => {
       const testTime = endTime.valueOf() - startTime.valueOf();
