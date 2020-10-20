@@ -11,8 +11,8 @@
     "prepush": "yarn run lint",
     "lint": "prettier --list-different \"**/*.{ts,js,json,css,md}\"",
     "lint:fix": "prettier --write \"**/*.{ts,js,json,css,md}\"",
-    "build:app": "webpack --config webpack.config.production --mode production",
-    "start:app": "webpack-dev-server --mode development",
+    "build:app": "yarn workspace app build",
+    "start:app": "yarn workspace app start",
     "start:api": "yarn workspace api start",
     "start": "concurrently --kill-others \"yarn run start:api\" \"yarn run start:app\""
   },

@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './app/index.tsx',
+  entry: './index.tsx',
   module: {
     rules: [
       {
@@ -27,7 +27,7 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
-      app: path.resolve(__dirname, './app'),
+      app: path.resolve(__dirname, './'),
     },
   },
   output: {

@@ -8,7 +8,7 @@ module.exports = {
     'react-hot-loader/patch',
     `webpack-dev-server/client?http://${config.app.host}:${config.app.port}`,
     'webpack/hot/only-dev-server',
-    'app/index.tsx',
+    './index.tsx',
   ],
   module: {
     rules: [
@@ -54,7 +54,7 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
-      app: path.resolve(__dirname, './app'),
+      app: path.resolve(__dirname, './'),
     },
   },
   node: {

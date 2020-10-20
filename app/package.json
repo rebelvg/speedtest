@@ -1,6 +1,10 @@
 {
   "name": "app",
   "version": "1.0.0",
+  "scripts": {
+    "build": "webpack --config webpack.config.production --mode production",
+    "start": "webpack-dev-server --mode development"
+  },
   "devDependencies": {
     "@types/react": "^16.9.53",
     "css-loader": "^0.28.10",
