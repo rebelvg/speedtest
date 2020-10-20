@@ -1,7 +1,6 @@
-import * as fs from 'fs';
 import { assert } from 'chai';
-import { CustomReadable } from './custom-readable';
 import { Writable } from 'stream';
+import { CustomReadable } from './custom-readable';
 
 describe('CustomReadable integration test', () => {
   class TestWritable extends Writable {
