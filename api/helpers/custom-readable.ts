@@ -15,7 +15,7 @@ export class CustomReadable extends Readable {
     const { fileSize, simulatedSpeed } = options;
 
     this.fileSize = fileSize;
-    this.simulatedSpeed = simulatedSpeed | Infinity;
+    this.simulatedSpeed = simulatedSpeed || Infinity;
   }
 
   private _pushBytes(bytes: number) {

@@ -1,9 +1,9 @@
-import express from 'express';
+import * as express from 'express';
 import * as fs from 'fs';
-import _ from 'lodash';
-import cors from 'cors';
+import * as _ from 'lodash';
+import * as cors from 'cors';
 
-import { API_SERVER } from '../config';
+import { API_SERVER } from './config';
 
 import { CustomReadable } from './helpers/custom-readable';
 import { CustomWritable } from './helpers/custom-writable';

@@ -15,7 +15,7 @@ export class CustomWritable extends Writable {
     const { fileSize, simulatedSpeed } = options;
 
     this.fileSize = fileSize;
-    this.simulatedSpeed = simulatedSpeed | Infinity;
+    this.simulatedSpeed = simulatedSpeed || Infinity;
   }
 
   public _write(chunk: Buffer, encoding: string, callback: (error?: Error) => void) {
