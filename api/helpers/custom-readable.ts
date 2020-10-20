@@ -1,16 +1,24 @@
-const { Readable } = require('stream');
+import { Readable } from 'stream';
 
-class CustomReadable extends Readable {
-  constructor(options = {}) {
-    const { fileSize = 0, simulatedSpeed = Infinity } = options;
+interface ICustomReadableOptions {
+  fileSize: number;
+  simulatedSpeed?: number;
+}
 
+export class CustomReadable extends Readable {
+  private fileSize: number = 0;
+  private simulatedSpeed: number = Infinity;
+
+  constructor(options: ICustomReadableOptions) {
     super();
 
+    const { fileSize, simulatedSpeed } = options;
+
     this.fileSize = fileSize;
-    this.simulatedSpeed = simulatedSpeed;
+    this.simulatedSpeed = simulatedSpeed | Infinity;
   }
 
-  _pushBytes(bytes) {
+  private _pushBytes(bytes: number) {
     if (bytes > this.fileSize) {
       this.push(Buffer.alloc(this.fileSize, 0x00));
     } else {
@@ -20,7 +28,7 @@ class CustomReadable extends Readable {
     this.fileSize -= bytes;
   }
 
-  _read(bytes) {
+  public _read(bytes: number) {
     if (this.fileSize > 0) {
       this.simulatedSpeed === Infinity
         ? this._pushBytes(bytes)
@@ -30,5 +38,3 @@ class CustomReadable extends Readable {
     }
   }
 }
-
-module.exports = CustomReadable;

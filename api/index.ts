@@ -1,12 +1,12 @@
-const express = require('express');
-const fs = require('fs');
-const _ = require('lodash');
-const cors = require('cors');
+import express from 'express';
+import * as fs from 'fs';
+import _ from 'lodash';
+import cors from 'cors';
 
-const { api: config } = require('../config');
+import { API_SERVER } from '../config';
 
-const CustomReadable = require('./helpers/customReadable');
-const CustomWritable = require('./helpers/customWritable');
+import { CustomReadable } from './helpers/custom-readable';
+import { CustomWritable } from './helpers/custom-writable';
 
 const app = express();
 
@@ -20,11 +20,11 @@ router.get('/download', async (req, res, next) => {
     'Content-Type': 'application/octet-stream',
     'Content-Disposition': 'attachment; filename=binary',
     'Content-Length': `${30 * 1024 * 1024}`,
-    'Cache-Control': 'no-cache, no-store, must-revalidate'
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
   });
 
   const readable = new CustomReadable({
-    fileSize: 30 * 1024 * 1024
+    fileSize: 30 * 1024 * 1024,
     //simulatedSpeed: 128
   });
 
@@ -33,7 +33,7 @@ router.get('/download', async (req, res, next) => {
 
 router.post('/upload', (req, res, next) => {
   const writable = new CustomWritable({
-    fileSize: 30 * 1024 * 1024
+    fileSize: 30 * 1024 * 1024,
     //simulatedSpeed: 128
   });
 
@@ -59,17 +59,17 @@ app.use((err, req, res, next) => {
 });
 
 //remove previous unix socket
-if (typeof config.port === 'string') {
-  if (fs.existsSync(config.port)) {
-    fs.unlinkSync(config.port);
+if (typeof API_SERVER.port === 'string') {
+  if (fs.existsSync(API_SERVER.port)) {
+    fs.unlinkSync(API_SERVER.port);
   }
 }
 
-app.listen(config.port, () => {
-  console.log('server is running.');
+app.listen(API_SERVER.port, () => {
+  console.log('api_server_running');
 
   //set unix socket rw rights for nginx
-  if (typeof config.port === 'string') {
-    fs.chmodSync(config.port, '777');
+  if (typeof API_SERVER.port === 'string') {
+    fs.chmodSync(API_SERVER.port, '777');
   }
 });

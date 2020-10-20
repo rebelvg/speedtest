@@ -30,5 +30,5 @@ ReactDOM.render(
       </ThemeProvider>
     </Provider>
   </BrowserRouter>,
-  document.getElementById('app')
+  document.getElementById('app'),
 );

@@ -2,11 +2,16 @@
   "name": "api",
   "version": "1.0.0",
   "scripts": {
-    "start": "node ."
+    "start": "ts-node ."
   },
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "lodash": "^4.17.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.8",
+    "@types/express": "^4.17.8",
+    "@types/lodash": "^4.14.162"
   }
 }

@@ -14,31 +14,31 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['env', 'stage-0', 'react'],
-            plugins: ['transform-class-properties', 'react-html-attrs', 'transform-decorators-legacy']
-          }
-        }
+            plugins: ['transform-class-properties', 'react-html-attrs', 'transform-decorators-legacy'],
+          },
+        },
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        loader: 'style-loader!css-loader',
       },
       {
         include: [path.resolve(__dirname, 'static')],
         test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/,
-        loader: 'file-loader'
-      }
-    ]
+        loader: 'file-loader',
+      },
+    ],
   },
   plugins: [new HtmlWebpackPlugin()],
   devtool: 'source-map',
   resolve: {
     alias: {
-      app: path.resolve(__dirname, './app')
-    }
+      app: path.resolve(__dirname, './app'),
+    },
   },
   output: {
     filename: 'bundle.js',
     publicPath: '/',
-    path: path.resolve(__dirname, 'dist')
-  }
+    path: path.resolve(__dirname, 'dist'),
+  },
 };

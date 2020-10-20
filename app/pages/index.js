@@ -13,7 +13,7 @@ class App extends Component {
       updated: 0,
       ended: 0,
       bytesDownloaded: 0,
-      allBytes: 0
+      allBytes: 0,
     };
   }
 
@@ -34,7 +34,7 @@ class App extends Component {
       this.setState({
         isRunning: true,
         started: Date.now(),
-        updated: Date.now()
+        updated: Date.now(),
       });
     };
 
@@ -43,7 +43,7 @@ class App extends Component {
 
       this.setState({
         bytesDownloaded: xhr.response.length,
-        updated: Date.now()
+        updated: Date.now(),
       });
     };
 
@@ -53,14 +53,14 @@ class App extends Component {
       this.setState({
         //updated: Date.now(),
         ended: Date.now(),
-        isRunning: false
+        isRunning: false,
       });
     };
 
     xhr.onreadystatechange = () => {
       if (xhr.readyState === xhr.HEADERS_RECEIVED) {
         this.setState({
-          allBytes: parseInt(xhr.getResponseHeader('Content-Length'))
+          allBytes: parseInt(xhr.getResponseHeader('Content-Length')),
         });
       }
     };
@@ -90,7 +90,7 @@ class App extends Component {
         isRunning: true,
         started: Date.now(),
         updated: Date.now(),
-        allBytes: uploadBytes
+        allBytes: uploadBytes,
       });
     };
 
@@ -101,7 +101,7 @@ class App extends Component {
         this.setState({
           bytesDownloaded: event.loaded,
           updated: Date.now(),
-          allBytes: event.total
+          allBytes: event.total,
         });
       }
     });
@@ -112,7 +112,7 @@ class App extends Component {
       this.setState({
         //updated: Date.now(),
         ended: Date.now(),
-        isRunning: false
+        isRunning: false,
       });
     };
 

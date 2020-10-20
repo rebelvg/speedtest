@@ -8,7 +8,7 @@ module.exports = {
     'react-hot-loader/patch',
     `webpack-dev-server/client?http://${config.app.host}:${config.app.port}`,
     'webpack/hot/only-dev-server',
-    'app/index.js'
+    'app/index.js',
   ],
   module: {
     rules: [
@@ -24,37 +24,37 @@ module.exports = {
                 'env',
                 {
                   targets: {
-                    browsers: ['last 2 Chrome versions']
-                  }
-                }
+                    browsers: ['last 2 Chrome versions'],
+                  },
+                },
               ],
               'react',
-              'stage-0'
+              'stage-0',
             ],
             plugins: [
               'transform-class-properties',
               'react-html-attrs',
               'transform-decorators-legacy',
-              'transform-async-to-generator'
-            ]
-          }
-        }
+              'transform-async-to-generator',
+            ],
+          },
+        },
       },
       {
         test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/,
-        loader: 'file-loader'
+        loader: 'file-loader',
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
-      }
-    ]
+        loader: 'style-loader!css-loader',
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
   ],
   devtool: 'source-map',
   devServer: {
@@ -69,22 +69,22 @@ module.exports = {
         target: `http://${config.api.host}:${config.api.port}`,
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
-        }
-      }
-    ]
+          '^/api': '',
+        },
+      },
+    ],
   },
   resolve: {
     alias: {
-      app: path.resolve(__dirname, './app')
-    }
+      app: path.resolve(__dirname, './app'),
+    },
   },
   node: {
-    fs: 'empty'
+    fs: 'empty',
   },
   output: {
     filename: 'dev_bundle.js',
     publicPath: '/',
-    path: path.resolve(__dirname, 'dist')
-  }
+    path: path.resolve(__dirname, 'dist'),
+  },
 };
