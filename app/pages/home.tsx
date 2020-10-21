@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { Container, ButtonOutline, Heading, Donut, Lead } from 'rebass';
 
 export class Home extends Component {
-  public state = { isRunning: false, started: 0, updated: 0, ended: 0, bytesDownloaded: 0, allBytes: 0 };
+  public state = { isRunning: false, startedDate: 0, updatedDate: 0, endedDate: 0, bytesDownloaded: 0, allBytes: 0 };
 
   private _downloadRequest() {
     console.log('_downloadRequest');
@@ -22,8 +22,10 @@ export class Home extends Component {
 
       this.setState({
         isRunning: true,
-        started: Date.now(),
-        updated: Date.now(),
+        startedDate: Date.now(),
+        updatedDate: Date.now(),
+        bytesDownloaded: 0,
+        allBytes: 0,
       });
     };
 
@@ -32,7 +34,7 @@ export class Home extends Component {
 
       this.setState({
         bytesDownloaded: xhr.response.length,
-        updated: Date.now(),
+        updatedDate: Date.now(),
       });
     };
 
@@ -40,13 +42,15 @@ export class Home extends Component {
       console.log('onloadend');
 
       this.setState({
-        //updated: Date.now(),
-        ended: Date.now(),
+        updatedDate: Date.now(),
+        endedDate: Date.now(),
         isRunning: false,
       });
     };
 
     xhr.onreadystatechange = () => {
+      console.log('onreadystatechange');
+
       if (xhr.readyState === xhr.HEADERS_RECEIVED) {
         this.setState({
           allBytes: parseInt(xhr.getResponseHeader('Content-Length')),
@@ -77,8 +81,8 @@ export class Home extends Component {
 
       this.setState({
         isRunning: true,
-        started: Date.now(),
-        updated: Date.now(),
+        startedDate: Date.now(),
+        updatedDate: Date.now(),
         allBytes: uploadBytes,
       });
     };
@@ -89,7 +93,7 @@ export class Home extends Component {
       if (event.lengthComputable) {
         this.setState({
           bytesDownloaded: event.loaded,
-          updated: Date.now(),
+          updatedDate: Date.now(),
           allBytes: event.total,
         });
       }
@@ -99,8 +103,8 @@ export class Home extends Component {
       console.log('onloadend');
 
       this.setState({
-        //updated: Date.now(),
-        ended: Date.now(),
+        updatedDate: Date.now(),
+        endedDate: Date.now(),
         isRunning: false,
       });
     };
@@ -109,7 +113,9 @@ export class Home extends Component {
   }
 
   public render() {
-    const { isRunning, started: startedAt, updated: updatedAt, bytesDownloaded, allBytes } = this.state;
+    const { isRunning, startedDate, updatedDate, endedDate, bytesDownloaded, allBytes } = this.state;
+
+    console.log(bytesDownloaded, startedDate, updatedDate);
 
     return (
       <Container>
@@ -137,7 +143,7 @@ export class Home extends Component {
           </ButtonWrap>
 
           <Speed>
-            {`Speed - ${_.round((((bytesDownloaded / 1024 / 1024) * 8) / (updatedAt - startedAt)) * 1000, 2) ||
+            {`Speed - ${_.round((((bytesDownloaded / 1024 / 1024) * 8) / (updatedDate - startedDate)) * 1000, 2) ||
               0} mbps`}
           </Speed>
 
