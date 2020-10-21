@@ -17,7 +17,7 @@
     "start:api": "yarn workspace api run start",
     "start": "concurrently --kill-others \"yarn run start:api\" \"yarn run start:app\"",
     "pm2:setup": "pm2 start pm2.json",
-    "pm2:update": "yarn install pm2 restart speedtest"
+    "pm2:update": "yarn install && pm2 restart speedtest"
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",
