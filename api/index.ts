@@ -31,21 +31,29 @@ router.get('/download', async (req, res, next) => {
   readable.pipe(res);
 });
 
-router.post('/upload', (req, res, next) => {
+router.post('/upload', async (req, res, next) => {
+  const fileSize = 30 * 1024 * 1024;
+
   const writable = new CustomWritable({
-    fileSize: 30 * 1024 * 1024,
+    fileSize,
     simulatedSpeed: 128,
   });
 
-  req.pipe(writable);
+  try {
+    await new Promise((resolve, reject) => {
+      writable.on('error', reject);
 
-  writable.on('error', () => {
-    req.destroy();
-  });
+      writable.on('finish', resolve);
 
-  req.on('end', () => {
-    res.send('Ok');
-  });
+      req.pipe(writable);
+    });
+  } catch (error) {
+    res.status(400).send('fail');
+
+    return;
+  }
+
+  res.send('ok');
 });
 
 app.use(router);

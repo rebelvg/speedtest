@@ -20,13 +20,21 @@ export class CustomWritable extends Writable {
 
   public _write(chunk: Buffer, encoding: string, callback: (error?: Error) => void) {
     if (this.fileSize > 0) {
+      this.fileSize -= chunk.length;
+
       this.simulatedSpeed === Infinity
         ? callback()
         : setTimeout(callback, ((1000 / this.simulatedSpeed) * chunk.length) / 1024);
-
-      this.fileSize -= chunk.length;
     } else {
-      callback(new Error('enough_data'));
+      callback(new Error('bad_data'));
+    }
+  }
+
+  public _final(callback) {
+    if (this.fileSize === 0) {
+      callback();
+    } else {
+      callback(new Error('bad_data'));
     }
   }
 }
