@@ -13,8 +13,17 @@ export class Home extends Component {
 
     xhr.open('GET', 'api/download', true);
 
-    xhr.onerror = () => {
+    xhr.onerror = error => {
       console.log('onerror');
+
+      console.log(error);
+
+      this.setState({
+        isRunning: false,
+        startedDate: Date.now(),
+        updatedDate: Date.now(),
+        allBytes: 0,
+      });
     };
 
     xhr.onloadstart = () => {
@@ -72,8 +81,17 @@ export class Home extends Component {
 
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    xhr.onerror = () => {
+    xhr.onerror = error => {
       console.log('onerror');
+
+      console.log(error);
+
+      this.setState({
+        isRunning: false,
+        startedDate: Date.now(),
+        updatedDate: Date.now(),
+        allBytes: 0,
+      });
     };
 
     xhr.onloadstart = () => {
@@ -114,8 +132,6 @@ export class Home extends Component {
 
   public render() {
     const { isRunning, startedDate, updatedDate, endedDate, bytesDownloaded, allBytes } = this.state;
-
-    console.log(bytesDownloaded, startedDate, updatedDate);
 
     return (
       <Container>
