@@ -4,7 +4,14 @@ import * as _ from 'lodash';
 import { Container, ButtonOutline, Heading, Donut, Lead } from 'rebass';
 
 export class Home extends Component {
-  public state = { isRunning: false, startedDate: 0, updatedDate: 0, endedDate: 0, bytesDownloaded: 0, allBytes: 0 };
+  public state = {
+    isRunning: false,
+    startedDate: 0,
+    updatedDate: 0,
+    endedDate: 0,
+    bytesDownloaded: 0,
+    allBytes: 0,
+  };
 
   private _downloadRequest() {
     console.log('_downloadRequest');
@@ -131,7 +138,14 @@ export class Home extends Component {
   }
 
   public render() {
-    const { isRunning, startedDate, updatedDate, endedDate, bytesDownloaded, allBytes } = this.state;
+    const {
+      isRunning,
+      startedDate,
+      updatedDate,
+      endedDate,
+      bytesDownloaded,
+      allBytes,
+    } = this.state;
 
     return (
       <Container>
@@ -159,14 +173,25 @@ export class Home extends Component {
           </ButtonWrap>
 
           <Speed>
-            {`Speed - ${_.round((((bytesDownloaded / 1024 / 1024) * 8) / (updatedDate - startedDate)) * 1000, 2) ||
-              0} mbps`}
+            {`Speed - ${_.round(
+              (((bytesDownloaded / 1024 / 1024) * 8) /
+                (updatedDate - startedDate)) *
+                1000,
+              2,
+            ) || 0} mbps`}
           </Speed>
 
           <ProgressWrapper>
-            <Donut strokeWidth={3} size={256} color="#2a6044" value={bytesDownloaded / allBytes || 0} />
+            <Donut
+              strokeWidth={3}
+              size={256}
+              color="#2a6044"
+              value={bytesDownloaded / allBytes || 0}
+            />
 
-            <Progress>{_.ceil((bytesDownloaded / allBytes) * 100) || 0}%</Progress>
+            <Progress>
+              {_.ceil((bytesDownloaded / allBytes) * 100) || 0}%
+            </Progress>
           </ProgressWrapper>
         </Wrapper>
       </Container>

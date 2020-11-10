@@ -10,8 +10,8 @@
   "scripts": {
     "test": "yarn workspace api run test",
     "prepush": "yarn run lint",
-    "lint": "prettier --list-different \"**/*.{ts,js,json,css,md}\"",
-    "lint:fix": "prettier --write \"**/*.{ts,js,json,css,md}\"",
+    "lint": "prettier --list-different \"**/*.{tsx,ts,js,json,css,md}\"",
+    "lint:fix": "prettier --write \"**/*.{tsx,ts,js,json,css,md}\"",
     "build:app": "yarn workspace app run build",
     "start:app": "yarn workspace app run start",
     "start:api": "yarn workspace api run start",

@@ -4,7 +4,11 @@ import { CustomReadable } from './custom-readable';
 
 describe('CustomReadable integration test', () => {
   class TestWritable extends Writable {
-    public _write(chunk: Buffer, encoding: string, callback: (error?: Error) => void) {
+    public _write(
+      chunk: Buffer,
+      encoding: string,
+      callback: (error?: Error) => void,
+    ) {
       callback();
     }
   }

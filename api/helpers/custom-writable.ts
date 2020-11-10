@@ -18,13 +18,20 @@ export class CustomWritable extends Writable {
     this.simulatedSpeed = simulatedSpeed || Infinity;
   }
 
-  public _write(chunk: Buffer, encoding: string, callback: (error?: Error) => void) {
+  public _write(
+    chunk: Buffer,
+    encoding: string,
+    callback: (error?: Error) => void,
+  ) {
     if (this.fileSize > 0) {
       this.fileSize -= chunk.length;
 
       this.simulatedSpeed === Infinity
         ? callback()
-        : setTimeout(callback, ((1000 / this.simulatedSpeed) * chunk.length) / 1024);
+        : setTimeout(
+            callback,
+            ((1000 / this.simulatedSpeed) * chunk.length) / 1024,
+          );
     } else {
       callback(new Error('bad_data'));
     }

@@ -32,7 +32,10 @@ export class CustomReadable extends Readable {
     if (this.fileSize > 0) {
       this.simulatedSpeed === Infinity
         ? this._pushBytes(bytes)
-        : setTimeout(() => this._pushBytes(bytes), ((1000 / this.simulatedSpeed) * bytes) / 1024);
+        : setTimeout(
+            () => this._pushBytes(bytes),
+            ((1000 / this.simulatedSpeed) * bytes) / 1024,
+          );
     } else {
       this.push(null);
     }
