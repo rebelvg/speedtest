@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "outDir": "./dist/",
-    "target": "es2019",
-    "module": "commonjs",
+    "target": "es5",
+    "module": "es6",
     "jsx": "react",
     "allowJs": true,
     "moduleResolution": "node",
