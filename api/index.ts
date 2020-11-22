@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as _ from 'lodash';
 import * as cors from 'cors';
 
-import { API_SERVER } from './config';
+import { PORT } from '../config-api';
 
 import { CustomReadable } from './helpers/custom-readable';
 import { CustomWritable } from './helpers/custom-writable';
@@ -67,17 +67,17 @@ app.use((err, req, res, next) => {
 });
 
 //remove previous unix socket
-if (typeof API_SERVER.port === 'string') {
-  if (fs.existsSync(API_SERVER.port)) {
-    fs.unlinkSync(API_SERVER.port);
+if (typeof PORT === 'string') {
+  if (fs.existsSync(PORT)) {
+    fs.unlinkSync(PORT);
   }
 }
 
-app.listen(API_SERVER.port, () => {
+app.listen(PORT, () => {
   console.log('api_server_running');
 
   //set unix socket rw rights for nginx
-  if (typeof API_SERVER.port === 'string') {
-    fs.chmodSync(API_SERVER.port, '777');
+  if (typeof PORT === 'string') {
+    fs.chmodSync(PORT, '777');
   }
 });

@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const config = require('./config');
+const config = require('../config-app');
 
 module.exports = {
   entry: [
@@ -38,13 +38,13 @@ module.exports = {
   devServer: {
     hot: true,
     host: config.app.host,
+    port: config.app.port,
     historyApiFallback: true,
     publicPath: '/',
-    port: config.app.port,
     proxy: [
       {
         path: '/api',
-        target: `http://${config.api.host}:${config.api.port}`,
+        target: config.api.host,
         changeOrigin: true,
         pathRewrite: {
           '^/api': '',
