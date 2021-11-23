@@ -20,8 +20,6 @@ export function rateLimitMiddleware(
 
   const userLimitRecord = _.find(USER_LIMIT, { ip: userIp });
 
-  console.log(userIp, USER_LIMIT);
-
   if (!userLimitRecord) {
     USER_LIMIT.push({
       ip: userIp,
@@ -32,8 +30,8 @@ export function rateLimitMiddleware(
     return next();
   }
 
-  if (userLimitRecord.count >= 1) {
-    if (Date.now() - userLimitRecord.timestamp.getTime() > 1 * 60 * 1000) {
+  if (userLimitRecord.count >= 10) {
+    if (Date.now() - userLimitRecord.timestamp.getTime() > 10 * 60 * 1000) {
       userLimitRecord.timestamp = new Date();
       userLimitRecord.count = 1;
 
