@@ -25,7 +25,7 @@ router.get('/download', rateLimitMiddleware, async (req, res, next) => {
   });
 
   const readable = new CustomReadable({
-    fileSize: 30 * 1024 * 1024,
+    fileSize: 32 * 1024 * 1024,
     // simulatedSpeed: 1024,
   });
 
@@ -33,7 +33,7 @@ router.get('/download', rateLimitMiddleware, async (req, res, next) => {
 });
 
 router.post('/upload', rateLimitMiddleware, async (req, res, next) => {
-  const fileSize = 30 * 1024 * 1024;
+  const fileSize = 32 * 1024 * 1024;
 
   const writable = new CustomWritable({
     fileSize,
@@ -80,7 +80,9 @@ if (typeof API.PORT === 'string') {
   }
 }
 
-app.listen(API.PORT, () => {
+const apiHost = typeof API.PORT === 'number' ? 'localhost' : undefined;
+
+app.listen(API.PORT as number, apiHost, () => {
   console.log('api_server_running');
 
   //set unix socket rw rights for nginx

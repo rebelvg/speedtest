@@ -99,7 +99,7 @@ export class Home extends Component {
   private _uploadRequest() {
     console.log('_uploadRequest');
 
-    const uploadBytes = 30 * 1024 * 1024;
+    const uploadBytes = 32 * 1024 * 1024;
 
     const xhr = new XMLHttpRequest();
 
