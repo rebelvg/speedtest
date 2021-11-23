@@ -1,13 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
-const config = require('../config-app');
+console.log(path.resolve('../app/.env'));
 
 module.exports = {
   entry: [
     'react-hot-loader/patch',
-    `webpack-dev-server/client?http://${config.app.host}:${config.app.port}`,
+    'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
     './index.tsx',
   ],
@@ -29,41 +30,40 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'Speedtest',
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
+    new Dotenv({
+      systemvars: true,
+      path: path.resolve('../app/.env'),
+    }),
   ],
   devtool: 'source-map',
-  devServer: {
-    hot: true,
-    host: config.app.host,
-    port: config.app.port,
-    historyApiFallback: true,
-    publicPath: '/',
-    proxy: [
-      {
-        path: '/api',
-        target: config.api.host,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': '',
-        },
-      },
-    ],
-  },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
       app: path.resolve(__dirname, './'),
     },
   },
-  node: {
-    fs: 'empty',
-  },
-  output: {
-    filename: 'dev_bundle.js',
+  devServer: {
+    hot: true,
+    host: 'localhost',
+    port: 3000,
+    historyApiFallback: true,
     publicPath: '/',
-    path: path.resolve(__dirname, 'dist'),
+    proxy: [
+      {
+        path: '/api',
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        secure: true,
+        pathRewrite: {
+          '^/api': '',
+        },
+      },
+    ],
   },
 };

@@ -1,8 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+  mode: 'production',
   entry: './index.tsx',
   module: {
     rules: [
@@ -22,7 +25,15 @@ module.exports = {
       },
     ],
   },
-  plugins: [new HtmlWebpackPlugin()],
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Speedtest',
+    }),
+    new Dotenv({
+      systemvars: true,
+    }),
+    new CopyWebpackPlugin(['staticwebapp.config.json']),
+  ],
   devtool: 'source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],

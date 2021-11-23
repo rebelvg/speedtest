@@ -7,6 +7,7 @@ import { PORT } from '../config-api';
 
 import { CustomReadable } from './helpers/custom-readable';
 import { CustomWritable } from './helpers/custom-writable';
+import { rateLimitMiddleware } from './middleware/rate-limit';
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.set('trust proxy', true);
 
 const router = express.Router();
 
-router.get('/download', async (req, res, next) => {
+router.get('/download', rateLimitMiddleware, async (req, res, next) => {
   res.writeHead(200, {
     'Content-Type': 'application/octet-stream',
     'Content-Disposition': 'attachment; filename=binary',
@@ -31,7 +32,7 @@ router.get('/download', async (req, res, next) => {
   readable.pipe(res);
 });
 
-router.post('/upload', async (req, res, next) => {
+router.post('/upload', rateLimitMiddleware, async (req, res, next) => {
   const fileSize = 30 * 1024 * 1024;
 
   const writable = new CustomWritable({
@@ -59,10 +60,16 @@ router.post('/upload', async (req, res, next) => {
 app.use(router);
 
 app.use((req, res, next) => {
-  throw new Error('Not found.');
+  throw new Error('not_found');
 });
 
 app.use((err, req, res, next) => {
+  if (err.status) {
+    res.status(err.status).json({ error: err.message });
+
+    return;
+  }
+
   res.status(500).json({ error: err.stack.split('\n') });
 });
 

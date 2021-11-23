@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import * as _ from 'lodash';
 import { Container, ButtonOutline, Heading, Donut, Lead } from 'rebass';
 
+import { config } from '../config';
+
 export class Home extends Component {
   public state = {
     isRunning: false,
@@ -11,6 +13,7 @@ export class Home extends Component {
     endedDate: 0,
     bytesDownloaded: 0,
     allBytes: 0,
+    error: null,
   };
 
   private _downloadRequest() {
@@ -18,18 +21,17 @@ export class Home extends Component {
 
     const xhr = new XMLHttpRequest();
 
-    xhr.open('GET', 'api/download', true);
+    xhr.open('GET', `${config.API_HOST}/download`, true);
 
-    xhr.onerror = error => {
+    xhr.onerror = (error) => {
       console.log('onerror');
-
-      console.log(error);
 
       this.setState({
         isRunning: false,
         startedDate: Date.now(),
         updatedDate: Date.now(),
         allBytes: 0,
+        error: 'network_error',
       });
     };
 
@@ -42,6 +44,7 @@ export class Home extends Component {
         updatedDate: Date.now(),
         bytesDownloaded: 0,
         allBytes: 0,
+        error: null,
       });
     };
 
@@ -54,13 +57,29 @@ export class Home extends Component {
       });
     };
 
-    xhr.onloadend = () => {
+    xhr.onloadend = (event) => {
       console.log('onloadend');
+
+      if (xhr.readyState !== xhr.DONE) {
+        return;
+      }
+
+      if (xhr.status > 300) {
+        this.setState({
+          updatedDate: Date.now(),
+          endedDate: Date.now(),
+          isRunning: false,
+          error: JSON.parse(xhr.response)?.error || 'ui_unknown_error',
+        });
+
+        return;
+      }
 
       this.setState({
         updatedDate: Date.now(),
         endedDate: Date.now(),
         isRunning: false,
+        error: null,
       });
     };
 
@@ -84,20 +103,19 @@ export class Home extends Component {
 
     const xhr = new XMLHttpRequest();
 
-    xhr.open('POST', 'api/upload', true);
+    xhr.open('POST', `${config.API_HOST}/upload`, true);
 
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-    xhr.onerror = error => {
+    xhr.onerror = (error) => {
       console.log('onerror');
-
-      console.log(error);
 
       this.setState({
         isRunning: false,
         startedDate: Date.now(),
         updatedDate: Date.now(),
         allBytes: 0,
+        error: 'network_error',
       });
     };
 
@@ -109,10 +127,11 @@ export class Home extends Component {
         startedDate: Date.now(),
         updatedDate: Date.now(),
         allBytes: uploadBytes,
+        error: null,
       });
     };
 
-    xhr.upload.addEventListener('progress', event => {
+    xhr.upload.addEventListener('progress', (event) => {
       console.log('onprogress', event.loaded);
 
       if (event.lengthComputable) {
@@ -124,13 +143,29 @@ export class Home extends Component {
       }
     });
 
-    xhr.onloadend = () => {
+    xhr.onloadend = (event) => {
       console.log('onloadend');
+
+      if (xhr.readyState !== xhr.DONE) {
+        return;
+      }
+
+      if (xhr.status > 300) {
+        this.setState({
+          updatedDate: Date.now(),
+          endedDate: Date.now(),
+          isRunning: false,
+          error: JSON.parse(xhr.response)?.error || 'ui_unknown_error',
+        });
+
+        return;
+      }
 
       this.setState({
         updatedDate: Date.now(),
         endedDate: Date.now(),
         isRunning: false,
+        error: null,
       });
     };
 
@@ -145,6 +180,7 @@ export class Home extends Component {
       endedDate,
       bytesDownloaded,
       allBytes,
+      error,
     } = this.state;
 
     return (
@@ -173,19 +209,23 @@ export class Home extends Component {
           </ButtonWrap>
 
           <Speed>
-            {`Speed - ${_.round(
-              (((bytesDownloaded / 1024 / 1024) * 8) /
-                (updatedDate - startedDate)) *
-                1000,
-              2,
-            ) || 0} mbps`}
+            {!error
+              ? `Speed - ${
+                  _.round(
+                    (((bytesDownloaded / 1024 / 1024) * 8) /
+                      (updatedDate - startedDate)) *
+                      1000,
+                    2,
+                  ) || 0
+                } mbps`
+              : error}
           </Speed>
 
           <ProgressWrapper>
             <Donut
               strokeWidth={3}
               size={256}
-              color="#2a6044"
+              color={!error ? '#2a6044' : '#ff0000'}
               value={bytesDownloaded / allBytes || 0}
             />
 
@@ -230,16 +270,16 @@ const Button = styled(ButtonOutline)`
   margin: 0px 20px;
   padding: 20px;
   width: 25%;
-  color: ${props => props.theme.primary};
+  color: ${(props) => props.theme.primary};
 
   &:disabled:hover {
     background-color: white;
     box-shadow: inset 0 0 0 2px;
-    color: ${props => props.theme.primary};
+    color: ${(props) => props.theme.primary};
   }
   &:hover {
-    color: ${props => props.theme.light};
-    background-color: ${props => props.theme.primary};
+    color: ${(props) => props.theme.light};
+    background-color: ${(props) => props.theme.primary};
   }
 
   @media (max-width: 667px) {
