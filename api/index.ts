@@ -20,7 +20,7 @@ router.get('/download', rateLimitMiddleware, async (req, res, next) => {
   res.writeHead(200, {
     'Content-Type': 'application/octet-stream',
     'Content-Disposition': 'attachment; filename=binary',
-    'Content-Length': `${30 * 1024 * 1024}`,
+    'Content-Length': `${32 * 1024 * 1024}`,
     'Cache-Control': 'no-cache, no-store, must-revalidate',
   });
 
