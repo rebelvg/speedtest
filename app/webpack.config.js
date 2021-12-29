@@ -54,16 +54,5 @@ module.exports = {
     port: 3000,
     historyApiFallback: true,
     publicPath: '/',
-    proxy: [
-      {
-        path: '/api',
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        secure: true,
-        pathRewrite: {
-          '^/api': '',
-        },
-      },
-    ],
   },
 };

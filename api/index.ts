@@ -80,7 +80,7 @@ if (typeof API.PORT === 'string') {
   }
 }
 
-const apiHost = typeof API.PORT === 'number' ? 'localhost' : undefined;
+const apiHost = typeof API.PORT === 'number' ? '0.0.0.0' : undefined;
 
 app.listen(API.PORT as number, apiHost, () => {
   console.log('api_server_running');
