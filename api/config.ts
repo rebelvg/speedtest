@@ -1,5 +1,8 @@
 import { env } from './env';
 
 export const API = {
-  PORT: Number.parseInt(env.API_PORT) || env.API_PORT,
+  PORT: env.API_PORT
+    ? Number.parseInt(env.API_PORT) || env.API_PORT
+    : undefined,
+  HOST: env.API_HOST,
 };

@@ -80,13 +80,22 @@ if (typeof API.PORT === 'string') {
   }
 }
 
-const apiHost = typeof API.PORT === 'number' ? '0.0.0.0' : undefined;
+if (API.HOST) {
+  app.listen(API.PORT as number, API.HOST, () => {
+    console.log('api_server_running', API.PORT, API.HOST);
 
-app.listen(API.PORT as number, apiHost, () => {
-  console.log('api_server_running');
+    //set unix socket rw rights for nginx
+    if (typeof API.PORT === 'string') {
+      fs.chmodSync(API.PORT, '777');
+    }
+  });
+} else {
+  app.listen(API.PORT as number, () => {
+    console.log('api_server_running', API.PORT);
 
-  //set unix socket rw rights for nginx
-  if (typeof API.PORT === 'string') {
-    fs.chmodSync(API.PORT, '777');
-  }
-});
+    //set unix socket rw rights for nginx
+    if (typeof API.PORT === 'string') {
+      fs.chmodSync(API.PORT, '777');
+    }
+  });
+}
