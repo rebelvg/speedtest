@@ -36,7 +36,7 @@ describe('CustomWritable integration test', () => {
     });
   });
 
-  context('when CustomWritable simulated speed is set', function() {
+  context('when CustomWritable simulated speed is set', function () {
     const timeout = 10 * 1000;
 
     this.timeout(timeout);

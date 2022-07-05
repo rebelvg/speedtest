@@ -46,7 +46,7 @@ describe('CustomReadable integration test', () => {
     });
   });
 
-  context('when CustomReadable simulated speed is set', function() {
+  context('when CustomReadable simulated speed is set', function () {
     const timeout = 10 * 1000;
 
     this.timeout(timeout);

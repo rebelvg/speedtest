@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as dotenv from 'dotenv';
 
-dotenv.config({ path: path.join(process.cwd(), '.env') });
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 interface IEnv {
   API_PORT: string | undefined;

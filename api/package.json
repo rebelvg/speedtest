@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "test": "mocha",
-    "start": "ts-node ."
+    "build": "tsc",
+    "start": "ts-node src/index.ts"
   },
   "dependencies": {
     "cors": "^2.8.4",
