@@ -17,7 +17,7 @@
     "build:api": "yarn workspace api run build",
     "start:api": "yarn workspace api run start",
     "start": "concurrently --kill-others \"yarn run start:api\" \"yarn run start:app\"",
-    "pre:deploy": "yarn install && yarn run build",
+    "pre:deploy": "yarn install && yarn run build:api",
     "pm2:setup": "yarn run pre:deploy && pm2 start pm2.json",
     "pm2": "yarn run pre:deploy && pm2 restart speedtest"
   },
