@@ -63,7 +63,7 @@ describe('CustomReadable integration test', () => {
 
       const readable = new CustomReadable({
         fileSize,
-        simulatedSpeed: 128,
+        simulatedSpeedKBps: 128,
       });
 
       readable.pipe(writable);
