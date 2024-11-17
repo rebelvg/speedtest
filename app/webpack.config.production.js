@@ -1,11 +1,16 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { parsed } = require('dotenv').config({
+  path: path.resolve('../app/.env'),
+});
+
+console.log(parsed);
 
 module.exports = {
   mode: 'production',
-  entry: './index.tsx',
+  entry: ['./index.tsx'],
   module: {
     rules: [
       {
@@ -19,18 +24,17 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Speedtest',
     }),
-    new Dotenv({
-      systemvars: true,
-    }),
     new CopyWebpackPlugin({
       patterns: ['staticwebapp.config.json'],
+    }),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify({
+        ...parsed,
+      }),
     }),
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
-    alias: {
-      app: path.resolve(__dirname, './'),
-    },
   },
   output: {
     filename: 'bundle.js',

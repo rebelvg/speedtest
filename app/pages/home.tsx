@@ -31,13 +31,15 @@ export class Home extends Component {
       error: null,
     });
 
-    // const response = await fetch(`${config.API_HOST}/download/${size}`, {
-    //   method: 'GET',
-    // });
+    console.log(config);
 
-    // for await (const chunk of response.body) {
-    //   // Do something with the chunk
-    // }
+    const response = await fetch(`${config.API_HOST}/download/${size}`, {
+      method: 'GET',
+    });
+
+    for await (const chunk of response.body) {
+      console.log('chunk', chunk.length);
+    }
 
     const xhr = new XMLHttpRequest();
 

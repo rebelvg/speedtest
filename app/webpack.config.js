@@ -1,16 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
+const { parsed } = require('dotenv').config({
+  path: path.resolve('../app/.env'),
+});
 
 module.exports = {
   mode: 'development',
-  entry: [
-    'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:3000',
-    'webpack/hot/only-dev-server',
-    './index.tsx',
-  ],
+  entry: ['./index.tsx'],
   module: {
     rules: [
       {
@@ -24,18 +21,15 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Speedtest',
     }),
-    new webpack.HotModuleReplacementPlugin(),
-    new Dotenv({
-      systemvars: true,
-      path: path.resolve('../app/.env'),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify({
+        ...parsed,
+      }),
     }),
   ],
   devtool: 'source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
-    alias: {
-      app: path.resolve(__dirname, './'),
-    },
   },
   devServer: {
     host: '0.0.0.0',
