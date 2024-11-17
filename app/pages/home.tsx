@@ -16,7 +16,7 @@ export class Home extends Component {
   private uploadOffset = 0;
   private lastUpdatedTime = 0;
 
-  private _downloadRequest() {
+  private async _downloadRequest(size: number) {
     console.log('_downloadRequest');
 
     this.lastUpdatedTime = Date.now();
@@ -31,9 +31,17 @@ export class Home extends Component {
       error: null,
     });
 
+    // const response = await fetch(`${config.API_HOST}/download/${size}`, {
+    //   method: 'GET',
+    // });
+
+    // for await (const chunk of response.body) {
+    //   // Do something with the chunk
+    // }
+
     const xhr = new XMLHttpRequest();
 
-    xhr.open('GET', `${config.API_HOST}/download`, true);
+    xhr.open('GET', `${config.API_HOST}/download/${size}`, true);
 
     xhr.onerror = (error) => {
       console.log('onerror');
@@ -80,8 +88,6 @@ export class Home extends Component {
     };
 
     xhr.onreadystatechange = () => {
-      console.log('onreadystatechange');
-
       if (xhr.readyState !== xhr.HEADERS_RECEIVED) {
         return;
       }
@@ -95,13 +101,13 @@ export class Home extends Component {
     xhr.send();
   }
 
-  private _uploadRequest() {
+  private _uploadRequest(size: number) {
     console.log('_uploadRequest');
 
     this.uploadOffset = 0;
     this.lastUpdatedTime = Date.now();
 
-    const uploadBytes = 32 * 1024 * 1024;
+    const uploadBytes = size * 1024 * 1024;
 
     this.setState({
       isRunning: true,
@@ -202,10 +208,19 @@ export class Home extends Component {
         <button
           disabled={isRunning}
           onClick={() => {
-            this._downloadRequest();
+            this._downloadRequest(32);
           }}
         >
-          Check Download Speed
+          Download 32MB
+        </button>
+
+        <button
+          disabled={isRunning}
+          onClick={() => {
+            this._downloadRequest(512);
+          }}
+        >
+          Download 128MB
         </button>
 
         <br />
@@ -214,10 +229,19 @@ export class Home extends Component {
         <button
           disabled={isRunning}
           onClick={() => {
-            this._uploadRequest();
+            this._uploadRequest(32);
           }}
         >
-          Check Upload Speed
+          Upload 32MB
+        </button>
+
+        <button
+          disabled={isRunning}
+          onClick={() => {
+            this._uploadRequest(512);
+          }}
+        >
+          Upload 128MB
         </button>
 
         <br />
