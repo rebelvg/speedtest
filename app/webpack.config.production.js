@@ -9,15 +9,9 @@ const { parsed } = require('dotenv').config({
   override: false,
 });
 
-console.log(process.env);
-console.log(parsed);
-
 _.forEach(parsed, (v, k) => {
   parsed[k] = process.env[k];
 });
-
-console.log(process.env);
-console.log(parsed);
 
 module.exports = {
   mode: 'production',
