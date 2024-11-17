@@ -36,6 +36,10 @@ export class Home extends Component {
         allBytes: parseInt(response.headers.get('Content-Length')),
       });
 
+      if (response.status > 300) {
+        throw new Error(`ERROR ${response.status}`);
+      }
+
       for await (const chunk of response.body) {
         this.setState({
           updatedDate: Date.now(),
@@ -46,7 +50,6 @@ export class Home extends Component {
       this.setState({
         updatedDate: Date.now(),
         endedDate: Date.now(),
-        error: response.status > 300 ? `ERROR ${response.status}` : null,
       });
     } catch (error) {
       this.setState({
