@@ -13,13 +13,8 @@ export class Home extends Component {
     error: null,
   };
 
-  private uploadOffset = 0;
-  private lastUpdatedTime = 0;
-
   private async _downloadRequest(size: number) {
     console.log('_downloadRequest');
-
-    this.lastUpdatedTime = Date.now();
 
     this.setState({
       isRunning: true,
@@ -31,153 +26,84 @@ export class Home extends Component {
       error: null,
     });
 
-    console.log(config);
-
-    const response = await fetch(`${config.API_HOST}/download/${size}`, {
-      method: 'GET',
-    });
-
-    for await (const chunk of response.body) {
-      console.log('chunk', chunk.length);
-    }
-
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('GET', `${config.API_HOST}/download/${size}`, true);
-
-    xhr.onerror = (error) => {
-      console.log('onerror');
-
-      this.setState({
-        isRunning: false,
-        error: 'ERROR',
+    try {
+      const response = await fetch(`${config.API_HOST}/download/${size}`, {
+        method: 'GET',
       });
-    };
-
-    xhr.onloadstart = () => {
-      console.log('onloadstart');
 
       this.setState({
         startedDate: Date.now(),
+        allBytes: parseInt(response.headers.get('Content-Length')),
       });
-    };
 
-    xhr.onprogress = () => {
-      if (Date.now() - this.lastUpdatedTime > 300) {
+      for await (const chunk of response.body) {
         this.setState({
           updatedDate: Date.now(),
-          bytesDownloaded: xhr.response.length,
+          bytesDownloaded: this.state.bytesDownloaded + chunk.length,
         });
-
-        this.lastUpdatedTime = Date.now();
-      }
-    };
-
-    xhr.onloadend = (event) => {
-      console.log('onloadend');
-
-      if (xhr.readyState !== xhr.DONE) {
-        return;
       }
 
       this.setState({
-        isRunning: false,
         updatedDate: Date.now(),
         endedDate: Date.now(),
-        bytesDownloaded: xhr.response.length,
-        error: xhr.status > 300 ? `ERROR ${xhr.status}` : null,
+        error: response.status > 300 ? `ERROR ${response.status}` : null,
       });
-    };
-
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState !== xhr.HEADERS_RECEIVED) {
-        return;
-      }
-
+    } catch (error) {
       this.setState({
-        allBytes: parseInt(xhr.getResponseHeader('Content-Length')),
-        updatedDate: Date.now(),
+        error: error.message,
       });
-    };
+    }
 
-    xhr.send();
+    this.setState({
+      isRunning: false,
+    });
   }
 
-  private _uploadRequest(size: number) {
+  private async _uploadRequest(size: number) {
     console.log('_uploadRequest');
-
-    this.uploadOffset = 0;
-    this.lastUpdatedTime = Date.now();
-
-    const uploadBytes = size * 1024 * 1024;
 
     this.setState({
       isRunning: true,
-      startedDate: Date.now(),
-      updatedDate: Date.now(),
+      startedDate: 0,
+      updatedDate: 0,
       endedDate: 0,
       bytesDownloaded: 0,
-      allBytes: uploadBytes,
+      allBytes: 0,
       error: null,
     });
 
-    let bytesDownloaded = 0;
+    const uploadBytes = size * 1024 * 1024;
 
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('POST', `${config.API_HOST}/upload`, true);
-
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-    xhr.onerror = (error) => {
-      console.log('onerror');
-
+    try {
       this.setState({
-        isRunning: false,
-        error: 'ERROR',
+        startedDate: Date.now(),
+        allBytes: uploadBytes,
       });
-    };
 
-    xhr.onloadstart = () => {
-      console.log('onloadstart');
-    };
-
-    xhr.upload.addEventListener('progress', (event) => {
-      if (event.lengthComputable) {
-        if (!this.uploadOffset) {
-          this.uploadOffset = event.loaded;
-        } else {
-          bytesDownloaded = event.loaded - this.uploadOffset;
-
-          if (Date.now() - this.lastUpdatedTime > 300) {
-            this.setState({
-              updatedDate: Date.now(),
-              bytesDownloaded,
-            });
-
-            this.lastUpdatedTime = Date.now();
-          }
-        }
-      }
-    });
-
-    xhr.onloadend = (event) => {
-      console.log('onloadend');
-
-      if (xhr.readyState !== xhr.DONE) {
-        return;
-      }
+      const response = await fetch(`${config.API_HOST}/upload`, {
+        method: 'POST',
+        headers: {
+          'Content-Length': `${uploadBytes}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new ArrayBuffer(uploadBytes),
+      });
 
       this.setState({
-        isRunning: false,
         updatedDate: Date.now(),
         endedDate: Date.now(),
-        bytesDownloaded: bytesDownloaded + this.uploadOffset,
-        error: xhr.status > 300 ? `ERROR ${xhr.status}` : null,
+        bytesDownloaded: uploadBytes,
+        error: response.status > 300 ? `ERROR ${response.status}` : null,
       });
-    };
+    } catch (error) {
+      this.setState({
+        error: error.message,
+      });
+    }
 
-    xhr.send(new ArrayBuffer(uploadBytes));
+    this.setState({
+      isRunning: false,
+    });
   }
 
   public render() {
@@ -191,7 +117,7 @@ export class Home extends Component {
       error,
     } = this.state;
 
-    const progressPercent = Math.round(
+    const progressPercent = Math.floor(
       (allBytes ? bytesDownloaded / allBytes : 0) * 100,
     );
 
@@ -222,7 +148,7 @@ export class Home extends Component {
             this._downloadRequest(512);
           }}
         >
-          Download 128MB
+          Download 512MB
         </button>
 
         <br />
@@ -240,7 +166,7 @@ export class Home extends Component {
         <button
           disabled={isRunning}
           onClick={() => {
-            this._uploadRequest(512);
+            this._uploadRequest(128);
           }}
         >
           Upload 128MB
