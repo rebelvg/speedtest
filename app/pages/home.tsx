@@ -62,38 +62,68 @@ export class Home extends Component {
   private async _uploadRequest(size: number) {
     console.log('_uploadRequest');
 
+    let uploadOffset = 0;
+
+    const uploadBytes = 32 * 1024 * 1024;
+
     this.setState({
       isRunning: true,
-      startedDate: 0,
-      updatedDate: 0,
+      startedDate: Date.now(),
+      updatedDate: Date.now(),
       endedDate: 0,
       bytesDownloaded: 0,
-      allBytes: 0,
+      allBytes: uploadBytes,
       error: null,
     });
 
-    const uploadBytes = size * 1024 * 1024;
+    let bytesDownloaded = 0;
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('POST', `${config.API_HOST}/upload`, true);
+
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        if (!uploadOffset) {
+          uploadOffset = event.loaded;
+        } else {
+          bytesDownloaded = event.loaded - uploadOffset;
+
+          this.setState({
+            updatedDate: Date.now(),
+            bytesDownloaded,
+          });
+        }
+      }
+    });
 
     try {
-      this.setState({
-        startedDate: Date.now(),
-        allBytes: uploadBytes,
-      });
+      await new Promise<void>((resolve, reject) => {
+        xhr.onloadend = (event) => {
+          if (xhr.readyState !== xhr.DONE) {
+            return;
+          }
 
-      const response = await fetch(`${config.API_HOST}/upload`, {
-        method: 'POST',
-        headers: {
-          'Content-Length': `${uploadBytes}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new ArrayBuffer(uploadBytes),
+          if (xhr.status > 300) {
+            reject(new Error(`ERROR ${xhr.status}`));
+          } else {
+            resolve();
+          }
+        };
+
+        xhr.onerror = (error) => {
+          reject(new Error('ERROR'));
+        };
+
+        xhr.send(new ArrayBuffer(uploadBytes));
       });
 
       this.setState({
         updatedDate: Date.now(),
         endedDate: Date.now(),
-        bytesDownloaded: uploadBytes,
-        error: response.status > 300 ? `ERROR ${response.status}` : null,
+        bytesDownloaded: bytesDownloaded + uploadOffset,
       });
     } catch (error) {
       this.setState({
