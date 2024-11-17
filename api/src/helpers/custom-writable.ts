@@ -2,20 +2,22 @@ import { Writable } from 'stream';
 
 interface ICustomWritableOptions {
   fileSize: number;
-  simulatedSpeed?: number;
+  simulatedSpeedKBps?: number;
 }
 
 export class CustomWritable extends Writable {
   private fileSize: number = 0;
-  private simulatedSpeed: number = Infinity;
+  private simulatedSpeedKBps: number = Infinity;
 
   constructor(options: ICustomWritableOptions) {
-    super();
+    super({
+      highWaterMark: (options.simulatedSpeedKBps || 16) * 1024,
+    });
 
-    const { fileSize, simulatedSpeed } = options;
+    const { fileSize, simulatedSpeedKBps } = options;
 
     this.fileSize = fileSize;
-    this.simulatedSpeed = simulatedSpeed || Infinity;
+    this.simulatedSpeedKBps = simulatedSpeedKBps || Infinity;
   }
 
   public _write(
@@ -26,12 +28,11 @@ export class CustomWritable extends Writable {
     if (this.fileSize > 0) {
       this.fileSize -= chunk.length;
 
-      this.simulatedSpeed === Infinity
+      const delay = ((chunk.length / this.simulatedSpeedKBps) * 1000) / 1024;
+
+      this.simulatedSpeedKBps === Infinity
         ? callback()
-        : setTimeout(
-            callback,
-            ((1000 / this.simulatedSpeed) * chunk.length) / 1024,
-          );
+        : setTimeout(callback, delay);
     } else {
       callback(new Error('bad_data'));
     }

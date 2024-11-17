@@ -8,6 +8,7 @@ import { API } from './config';
 import { CustomReadable } from './helpers/custom-readable';
 import { CustomWritable } from './helpers/custom-writable';
 import { rateLimitMiddleware } from './middleware/rate-limit';
+import { Readable } from 'stream';
 
 const app = express();
 
@@ -26,7 +27,7 @@ router.get('/download', rateLimitMiddleware, async (req, res, next) => {
 
   const readable = new CustomReadable({
     fileSize: 32 * 1024 * 1024,
-    // simulatedSpeed: 1024,
+    // simulatedSpeedKBps: 1024,
   });
 
   readable.pipe(res);
@@ -37,7 +38,7 @@ router.post('/upload', rateLimitMiddleware, async (req, res, next) => {
 
   const writable = new CustomWritable({
     fileSize,
-    // simulatedSpeed: 1024,
+    // simulatedSpeedKBps: 1024,
   });
 
   try {

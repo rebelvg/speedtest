@@ -13,8 +13,23 @@ export class Home extends Component {
     error: null,
   };
 
+  private uploadOffset = 0;
+  private lastUpdatedTime = 0;
+
   private _downloadRequest() {
     console.log('_downloadRequest');
+
+    this.lastUpdatedTime = Date.now();
+
+    this.setState({
+      isRunning: true,
+      startedDate: 0,
+      updatedDate: 0,
+      endedDate: 0,
+      bytesDownloaded: 0,
+      allBytes: 0,
+      error: null,
+    });
 
     const xhr = new XMLHttpRequest();
 
@@ -25,10 +40,7 @@ export class Home extends Component {
 
       this.setState({
         isRunning: false,
-        startedDate: Date.now(),
-        updatedDate: Date.now(),
-        allBytes: 0,
-        error: 'network_error',
+        error: 'ERROR',
       });
     };
 
@@ -36,22 +48,19 @@ export class Home extends Component {
       console.log('onloadstart');
 
       this.setState({
-        isRunning: true,
         startedDate: Date.now(),
-        updatedDate: Date.now(),
-        bytesDownloaded: 0,
-        allBytes: 0,
-        error: null,
       });
     };
 
     xhr.onprogress = () => {
-      console.log('onprogress', xhr.response.length);
+      if (Date.now() - this.lastUpdatedTime > 1000) {
+        this.setState({
+          updatedDate: Date.now(),
+          bytesDownloaded: xhr.response.length,
+        });
 
-      this.setState({
-        bytesDownloaded: xhr.response.length,
-        updatedDate: Date.now(),
-      });
+        this.lastUpdatedTime = Date.now();
+      }
     };
 
     xhr.onloadend = (event) => {
@@ -61,33 +70,26 @@ export class Home extends Component {
         return;
       }
 
-      if (xhr.status > 300) {
-        this.setState({
-          updatedDate: Date.now(),
-          endedDate: Date.now(),
-          isRunning: false,
-          error: JSON.parse(xhr.response)?.error || 'ui_unknown_error',
-        });
-
-        return;
-      }
-
       this.setState({
+        isRunning: false,
         updatedDate: Date.now(),
         endedDate: Date.now(),
-        isRunning: false,
-        error: null,
+        bytesDownloaded: xhr.response.length,
+        error: xhr.status > 300 ? `ERROR ${xhr.status}` : null,
       });
     };
 
     xhr.onreadystatechange = () => {
       console.log('onreadystatechange');
 
-      if (xhr.readyState === xhr.HEADERS_RECEIVED) {
-        this.setState({
-          allBytes: parseInt(xhr.getResponseHeader('Content-Length')),
-        });
+      if (xhr.readyState !== xhr.HEADERS_RECEIVED) {
+        return;
       }
+
+      this.setState({
+        allBytes: parseInt(xhr.getResponseHeader('Content-Length')),
+        updatedDate: Date.now(),
+      });
     };
 
     xhr.send();
@@ -96,7 +98,20 @@ export class Home extends Component {
   private _uploadRequest() {
     console.log('_uploadRequest');
 
+    this.uploadOffset = 0;
+    this.lastUpdatedTime = Date.now();
+
     const uploadBytes = 32 * 1024 * 1024;
+
+    this.setState({
+      isRunning: true,
+      startedDate: Date.now(),
+      updatedDate: Date.now(),
+      endedDate: 0,
+      bytesDownloaded: 0,
+      allBytes: uploadBytes,
+      error: null,
+    });
 
     const xhr = new XMLHttpRequest();
 
@@ -109,34 +124,34 @@ export class Home extends Component {
 
       this.setState({
         isRunning: false,
-        startedDate: Date.now(),
-        updatedDate: Date.now(),
-        allBytes: 0,
-        error: 'network_error',
+        error: 'ERROR',
       });
     };
 
     xhr.onloadstart = () => {
       console.log('onloadstart');
-
-      this.setState({
-        isRunning: true,
-        startedDate: Date.now(),
-        updatedDate: Date.now(),
-        allBytes: uploadBytes,
-        error: null,
-      });
     };
 
     xhr.upload.addEventListener('progress', (event) => {
       console.log('onprogress', event.loaded);
 
       if (event.lengthComputable) {
-        this.setState({
-          bytesDownloaded: event.loaded,
-          updatedDate: Date.now(),
-          allBytes: event.total,
-        });
+        if (!this.uploadOffset) {
+          this.uploadOffset = event.loaded;
+
+          this.setState({
+            updatedDate: Date.now(),
+          });
+        } else {
+          if (Date.now() - this.lastUpdatedTime > 1000) {
+            this.setState({
+              updatedDate: Date.now(),
+              bytesDownloaded: event.loaded - this.uploadOffset,
+            });
+
+            this.lastUpdatedTime = Date.now();
+          }
+        }
       }
     });
 
@@ -147,22 +162,12 @@ export class Home extends Component {
         return;
       }
 
-      if (xhr.status > 300) {
-        this.setState({
-          updatedDate: Date.now(),
-          endedDate: Date.now(),
-          isRunning: false,
-          error: JSON.parse(xhr.response)?.error || 'ui_unknown_error',
-        });
-
-        return;
-      }
-
       this.setState({
+        isRunning: false,
         updatedDate: Date.now(),
         endedDate: Date.now(),
-        isRunning: false,
-        error: null,
+        bytesDownloaded: this.state.bytesDownloaded + this.uploadOffset,
+        error: xhr.status > 300 ? `ERROR ${xhr.status}` : null,
       });
     };
 
@@ -180,7 +185,13 @@ export class Home extends Component {
       error,
     } = this.state;
 
-    const progressPercent = Math.round((bytesDownloaded / allBytes || 0) * 100);
+    const progressPercent = Math.round(
+      (allBytes ? bytesDownloaded / allBytes : 0) * 100,
+    );
+
+    const speedMbps =
+      (((bytesDownloaded / 1024 / 1024) * 8) / (updatedDate - startedDate)) *
+      1000;
 
     return (
       <div style={{}}>
@@ -215,13 +226,9 @@ export class Home extends Component {
         <br />
 
         {!error
-          ? `Speed - ${
-              Math.round(
-                (((bytesDownloaded / 1024 / 1024) * 8) /
-                  (updatedDate - startedDate)) *
-                  1000,
-              ) || 0
-            } mbps`
+          ? `Speed - ${(Number.isFinite(speedMbps) ? speedMbps : 0).toFixed(
+              2,
+            )} mbps`
           : error}
 
         <br />

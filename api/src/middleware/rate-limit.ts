@@ -31,13 +31,13 @@ export function rateLimitMiddleware(
   }
 
   if (userLimitRecord.count >= 10) {
-    if (Date.now() - userLimitRecord.timestamp.getTime() > 10 * 60 * 1000) {
+    if (Date.now() - userLimitRecord.timestamp.getTime() > 60 * 1000) {
       userLimitRecord.timestamp = new Date();
       userLimitRecord.count = 1;
 
       return next();
     } else {
-      return next(new RateLimitError('Rate limit, 10 requests per 10 minutes'));
+      return next(new RateLimitError());
     }
   }
 
