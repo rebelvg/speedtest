@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import * as _ from 'lodash';
-import { Container, ButtonOutline, Heading, Donut, Lead } from 'rebass';
 
 import { config } from '../config';
 
@@ -183,124 +180,59 @@ export class Home extends Component {
       error,
     } = this.state;
 
+    const progressPercent = Math.round((bytesDownloaded / allBytes || 0) * 100);
+
     return (
-      <Container>
-        <Wrapper>
-          <Header>Speedtest</Header>
+      <div style={{}}>
+        {`Speedtest`}
 
-          <ButtonWrap>
-            <Button
-              disabled={isRunning}
-              onClick={() => {
-                this._downloadRequest();
-              }}
-            >
-              Check Download Speed
-            </Button>
+        <br />
+        <br />
+        <br />
 
-            <Button
-              disabled={isRunning}
-              onClick={() => {
-                this._uploadRequest();
-              }}
-            >
-              Check Upload Speed
-            </Button>
-          </ButtonWrap>
+        <button
+          disabled={isRunning}
+          onClick={() => {
+            this._downloadRequest();
+          }}
+        >
+          Check Download Speed
+        </button>
 
-          <Speed>
-            {!error
-              ? `Speed - ${
-                  _.round(
-                    (((bytesDownloaded / 1024 / 1024) * 8) /
-                      (updatedDate - startedDate)) *
-                      1000,
-                    2,
-                  ) || 0
-                } mbps`
-              : error}
-          </Speed>
+        <br />
+        <br />
 
-          <ProgressWrapper>
-            <Donut
-              strokeWidth={3}
-              size={256}
-              color={!error ? '#2a6044' : '#ff0000'}
-              value={bytesDownloaded / allBytes || 0}
-            />
+        <button
+          disabled={isRunning}
+          onClick={() => {
+            this._uploadRequest();
+          }}
+        >
+          Check Upload Speed
+        </button>
 
-            <Progress>
-              {_.ceil((bytesDownloaded / allBytes) * 100) || 0}%
-            </Progress>
-          </ProgressWrapper>
-        </Wrapper>
-      </Container>
+        <br />
+        <br />
+
+        {!error
+          ? `Speed - ${
+              Math.round(
+                (((bytesDownloaded / 1024 / 1024) * 8) /
+                  (updatedDate - startedDate)) *
+                  1000,
+              ) || 0
+            } mbps`
+          : error}
+
+        <br />
+        <br />
+
+        {`[${Array.from({ length: progressPercent })
+          .map((i) => '|')
+          .join('')}${Array.from({ length: (progressPercent - 100) * -1 })
+          .map((i) => '/')
+          .join('')}] ${progressPercent}%`}
+      </div>
     );
   }
 }
-
-const Wrapper = styled.div`
-  margin: 0px auto;
-`;
-
-const ProgressWrapper = styled.div`
-  width: 256px;
-  height: 256px;
-  position: relative;
-  margin: 0px auto;
-`;
-
-const Speed = styled(Lead)`
-  text-align: center;
-  padding: 20px;
-`;
-
-const Progress = styled.div`
-  width: 256px;
-  height: 256px;
-  display: flex;
-  position: absolute;
-  top: 0px;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-`;
-
-const Button = styled(ButtonOutline)`
-  margin: 0px 20px;
-  padding: 20px;
-  width: 25%;
-  color: ${(props) => props.theme.primary};
-
-  &:disabled:hover {
-    background-color: white;
-    box-shadow: inset 0 0 0 2px;
-    color: ${(props) => props.theme.primary};
-  }
-  &:hover {
-    color: ${(props) => props.theme.light};
-    background-color: ${(props) => props.theme.primary};
-  }
-
-  @media (max-width: 667px) {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0px;
-  }
-`;
-
-const ButtonWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  @media (max-width: 667px) {
-    flex-direction: column;
-  }
-`;
-
-const Header = styled(Heading)`
-  color: #1c1c1c;
-  font-size: 2em;
-  margin: 10px 0px;
-  text-transform: uppercase;
-  text-align: center;
-`;
