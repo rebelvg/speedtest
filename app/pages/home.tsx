@@ -53,7 +53,7 @@ export class Home extends Component {
     };
 
     xhr.onprogress = () => {
-      if (Date.now() - this.lastUpdatedTime > 1000) {
+      if (Date.now() - this.lastUpdatedTime > 300) {
         this.setState({
           updatedDate: Date.now(),
           bytesDownloaded: xhr.response.length,
@@ -113,6 +113,8 @@ export class Home extends Component {
       error: null,
     });
 
+    let bytesDownloaded = 0;
+
     const xhr = new XMLHttpRequest();
 
     xhr.open('POST', `${config.API_HOST}/upload`, true);
@@ -138,15 +140,13 @@ export class Home extends Component {
       if (event.lengthComputable) {
         if (!this.uploadOffset) {
           this.uploadOffset = event.loaded;
-
-          this.setState({
-            updatedDate: Date.now(),
-          });
         } else {
-          if (Date.now() - this.lastUpdatedTime > 1000) {
+          bytesDownloaded = event.loaded - this.uploadOffset;
+
+          if (Date.now() - this.lastUpdatedTime > 300) {
             this.setState({
               updatedDate: Date.now(),
-              bytesDownloaded: event.loaded - this.uploadOffset,
+              bytesDownloaded,
             });
 
             this.lastUpdatedTime = Date.now();
@@ -166,7 +166,7 @@ export class Home extends Component {
         isRunning: false,
         updatedDate: Date.now(),
         endedDate: Date.now(),
-        bytesDownloaded: this.state.bytesDownloaded + this.uploadOffset,
+        bytesDownloaded: bytesDownloaded + this.uploadOffset,
         error: xhr.status > 300 ? `ERROR ${xhr.status}` : null,
       });
     };
