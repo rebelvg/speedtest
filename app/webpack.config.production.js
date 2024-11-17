@@ -34,7 +34,6 @@ module.exports = {
     }),
     new CopyWebpackPlugin(['staticwebapp.config.json']),
   ],
-  devtool: 'source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {

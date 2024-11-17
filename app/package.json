@@ -2,7 +2,7 @@
   "name": "app",
   "version": "1.0.0",
   "scripts": {
-    "build": "webpack --config webpack.config.production --mode production",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.config.production --mode production",
     "start": "webpack-dev-server --mode development"
   },
   "devDependencies": {
