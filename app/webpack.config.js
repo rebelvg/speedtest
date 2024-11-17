@@ -3,8 +3,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
-console.log(path.resolve('../app/.env'));
-
 module.exports = {
   entry: [
     'react-hot-loader/patch',
@@ -18,10 +16,6 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
-      },
-      {
-        test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/,
-        loader: 'file-loader',
       },
     ],
   },

@@ -13,11 +13,6 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
-      {
-        include: [path.resolve(__dirname, 'static')],
-        test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/,
-        loader: 'file-loader',
-      },
     ],
   },
   plugins: [
