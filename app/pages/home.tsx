@@ -135,8 +135,6 @@ export class Home extends Component {
     };
 
     xhr.upload.addEventListener('progress', (event) => {
-      console.log('onprogress', event.loaded);
-
       if (event.lengthComputable) {
         if (!this.uploadOffset) {
           this.uploadOffset = event.loaded;
