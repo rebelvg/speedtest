@@ -2,14 +2,21 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const _ = require('lodash');
+
 const { parsed } = require('dotenv').config({
   path: path.resolve('../app/.env'),
 });
-const _ = require('lodash');
+
+console.log(process.env);
+console.log(parsed);
 
 _.forEach(parsed, (v, k) => {
   parsed[k] = process.env[k];
 });
+
+console.log(process.env);
+console.log(parsed);
 
 module.exports = {
   mode: 'production',
