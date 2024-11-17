@@ -5,8 +5,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { parsed } = require('dotenv').config({
   path: path.resolve('../app/.env'),
 });
+const _ = require('lodash');
 
-console.log(parsed);
+_.forEach(parsed, (v, k) => {
+  parsed[k] = process.env[k];
+});
 
 module.exports = {
   mode: 'production',
