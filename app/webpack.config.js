@@ -1,8 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 const { parsed } = require('dotenv').config({
-  path: path.resolve('../app/.env'),
+  path: [path.resolve('../app/.env'), path.resolve('../app/.env.example')],
+  override: false,
 });
 
 module.exports = {

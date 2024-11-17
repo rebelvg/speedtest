@@ -5,7 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const _ = require('lodash');
 
 const { parsed } = require('dotenv').config({
-  path: path.resolve('../app/.env'),
+  path: [path.resolve('../app/.env'), path.resolve('../app/.env.example')],
+  override: false,
 });
 
 console.log(process.env);
