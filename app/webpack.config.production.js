@@ -22,7 +22,9 @@ module.exports = {
     new Dotenv({
       systemvars: true,
     }),
-    new CopyWebpackPlugin(['staticwebapp.config.json']),
+    new CopyWebpackPlugin({
+      patterns: ['staticwebapp.config.json'],
+    }),
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
