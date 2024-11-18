@@ -67,7 +67,7 @@ export class Home extends Component {
 
     let uploadOffset = 0;
 
-    const uploadBytes = 32 * 1024 * 1024;
+    const uploadBytes = size * 1024 * 1024;
 
     this.setState({
       isRunning: true,
