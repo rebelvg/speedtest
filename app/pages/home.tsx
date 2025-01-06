@@ -40,11 +40,20 @@ export class Home extends Component {
         throw new Error(`ERROR ${response.status}`);
       }
 
-      for await (const chunk of response.body) {
-        this.setState({
-          updatedDate: Date.now(),
-          bytesDownloaded: this.state.bytesDownloaded + chunk.length,
-        });
+      const reader = response.body.getReader();
+
+      let done: boolean;
+      let value: Uint8Array;
+
+      while (!done) {
+        ({ done, value } = await reader.read());
+
+        if (value) {
+          this.setState({
+            updatedDate: Date.now(),
+            bytesDownloaded: this.state.bytesDownloaded + value.length,
+          });
+        }
       }
 
       this.setState({
