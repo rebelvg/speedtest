@@ -26,33 +26,38 @@ export class Home extends React.Component {
       error: null,
     });
 
+    let bytesDownloaded = 0;
+
     try {
       const response = await fetch(`${config.API_HOST}/download/${size}`, {
         method: 'GET',
-      });
-
-      this.setState({
-        startedDate: Date.now(),
-        allBytes: parseInt(response.headers.get('Content-Length')),
       });
 
       if (response.status > 300) {
         throw new Error(`ERROR ${response.status}`);
       }
 
+      this.setState({
+        startedDate: Date.now(),
+        allBytes: parseInt(response.headers.get('Content-Length')),
+      });
+
       const reader = response.body.getReader();
 
-      let done: boolean;
-      let value: Uint8Array;
-
-      while (!done) {
-        ({ done, value } = await reader.read());
+      while (true) {
+        const { done, value } = await reader.read();
 
         if (value) {
+          bytesDownloaded += value.length;
+
           this.setState({
             updatedDate: Date.now(),
-            bytesDownloaded: this.state.bytesDownloaded + value.length,
+            bytesDownloaded,
           });
+        }
+
+        if (done) {
+          break;
         }
       }
 
@@ -73,8 +78,6 @@ export class Home extends React.Component {
 
   private async _uploadRequest(size: number) {
     console.log('_uploadRequest');
-
-    let uploadOffset = 0;
 
     const uploadBytes = size * 1024 * 1024;
 
@@ -97,18 +100,16 @@ export class Home extends React.Component {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
     xhr.upload.addEventListener('progress', (event) => {
-      if (event.lengthComputable) {
-        if (!uploadOffset) {
-          uploadOffset = event.loaded;
-        } else {
-          bytesDownloaded = event.loaded - uploadOffset;
-
-          this.setState({
-            updatedDate: Date.now(),
-            bytesDownloaded,
-          });
-        }
+      if (!event.lengthComputable) {
+        return;
       }
+
+      bytesDownloaded = event.loaded;
+
+      this.setState({
+        updatedDate: Date.now(),
+        bytesDownloaded,
+      });
     });
 
     try {
@@ -126,6 +127,8 @@ export class Home extends React.Component {
         };
 
         xhr.onerror = (error) => {
+          console.error(error);
+
           reject(new Error('ERROR'));
         };
 
@@ -135,7 +138,7 @@ export class Home extends React.Component {
       this.setState({
         updatedDate: Date.now(),
         endedDate: Date.now(),
-        bytesDownloaded: bytesDownloaded + uploadOffset,
+        bytesDownloaded,
       });
     } catch (error) {
       this.setState({
@@ -162,6 +165,15 @@ export class Home extends React.Component {
     const progressPercent = Math.floor(
       (allBytes ? bytesDownloaded / allBytes : 0) * 100,
     );
+
+    console.log(progressPercent, allBytes, bytesDownloaded);
+
+    const clampedProgressPercent = Math.min(100, Math.max(0, progressPercent));
+
+    const barWidth = 50;
+    const filledBars = Math.round((clampedProgressPercent / 100) * barWidth);
+    const emptyBars = barWidth - filledBars;
+    const progressBar = `${'#'.repeat(filledBars)}${'.'.repeat(emptyBars)}`;
 
     const speedMbps =
       (((bytesDownloaded / 1024 / 1024) * 8) / (updatedDate - startedDate)) *
@@ -226,11 +238,9 @@ export class Home extends React.Component {
         <br />
         <br />
 
-        {`[${Array.from({ length: progressPercent })
-          .map((i) => '|')
-          .join('')}${Array.from({ length: (progressPercent - 100) * -1 })
-          .map((i) => '/')
-          .join('')}] ${progressPercent}%`}
+        <div style={{ fontFamily: 'monospace' }}>
+          {`[${progressBar}] ${clampedProgressPercent}%`}
+        </div>
       </div>
     );
   }
