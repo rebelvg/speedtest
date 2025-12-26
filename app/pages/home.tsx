@@ -44,16 +44,22 @@ export class Home extends React.Component {
 
       const reader = response.body.getReader();
 
+      let lastUpdate = Date.now();
+
       while (true) {
         const { done, value } = await reader.read();
 
         if (value) {
           bytesDownloaded += value.length;
 
-          this.setState({
-            updatedDate: Date.now(),
-            bytesDownloaded,
-          });
+          if (Date.now() - lastUpdate > 500) {
+            this.setState({
+              updatedDate: Date.now(),
+              bytesDownloaded,
+            });
+
+            lastUpdate = Date.now();
+          }
         }
 
         if (done) {
@@ -62,6 +68,7 @@ export class Home extends React.Component {
       }
 
       this.setState({
+        bytesDownloaded,
         updatedDate: Date.now(),
         endedDate: Date.now(),
       });
@@ -99,6 +106,8 @@ export class Home extends React.Component {
 
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
+    let lastUpdate = Date.now();
+
     xhr.upload.addEventListener('progress', (event) => {
       if (!event.lengthComputable) {
         return;
@@ -106,10 +115,14 @@ export class Home extends React.Component {
 
       bytesDownloaded = event.loaded;
 
-      this.setState({
-        updatedDate: Date.now(),
-        bytesDownloaded,
-      });
+      if (Date.now() - lastUpdate > 500) {
+        this.setState({
+          updatedDate: Date.now(),
+          bytesDownloaded,
+        });
+
+        lastUpdate = Date.now();
+      }
     });
 
     try {
