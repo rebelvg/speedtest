@@ -1,9 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
 import { Home } from './pages/home';
+import { createRoot } from 'react-dom/client';
 
 const appElement = document.createElement('div');
 appElement.setAttribute('id', 'app');
 document.body.appendChild(appElement);
 
-ReactDOM.render(<Home />, document.getElementById('app'));
+const root = createRoot(appElement);
+root.render(<Home />);

@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 
 import { config } from '../config';
 
-export class Home extends Component {
+export class Home extends React.Component {
   public state = {
     isRunning: false,
     startedDate: 0,
