@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 
 class RateLimitError extends Error {
   public status = 429;
+  public message = 'rate_limit';
 }
 
 const USER_LIMIT: {
@@ -18,6 +19,12 @@ export function rateLimitMiddleware(
 ) {
   const userIp = req.ip;
 
+  if (!userIp) {
+    return next(new RateLimitError());
+  }
+
+  _.remove(USER_LIMIT, (r) => Date.now() - r.timestamp.getTime() > 60 * 1000);
+
   const userLimitRecord = _.find(USER_LIMIT, { ip: userIp });
 
   if (!userLimitRecord) {
@@ -30,18 +37,11 @@ export function rateLimitMiddleware(
     return next();
   }
 
-  if (userLimitRecord.count >= 10) {
-    if (Date.now() - userLimitRecord.timestamp.getTime() > 60 * 1000) {
-      userLimitRecord.timestamp = new Date();
-      userLimitRecord.count = 1;
-
-      return next();
-    } else {
-      return next(new RateLimitError());
-    }
-  }
-
   userLimitRecord.count++;
+
+  if (userLimitRecord.count > 10) {
+    return next(new RateLimitError());
+  }
 
   return next();
 }

@@ -31,12 +31,14 @@ export class CustomReadable extends Readable {
   }
 
   public _read(bytes: number) {
-    const delay = ((bytes / this.simulatedSpeedKBps) * 1000) / 1024;
-
     if (this.fileSize > 0) {
-      this.simulatedSpeedKBps === Infinity
-        ? this._pushBytes(bytes)
-        : setTimeout(() => this._pushBytes(bytes), delay);
+      if (this.simulatedSpeedKBps === Infinity) {
+        this._pushBytes(bytes);
+      } else {
+        const delay = ((bytes / this.simulatedSpeedKBps) * 1000) / 1024;
+
+        setTimeout(() => this._pushBytes(bytes), delay);
+      }
     } else {
       this.push(null);
     }

@@ -7,7 +7,8 @@
     "noUnusedLocals": false,
     "sourceMap": true,
     "declaration": true,
-    "incremental": true,
+    "incremental": false,
+    "strictNullChecks": true,
     "outDir": "./dist"
   },
   "include": ["./src/**/*"]

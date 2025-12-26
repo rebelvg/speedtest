@@ -22,18 +22,18 @@
     "pm2": "yarn run pre:deploy && pm2 restart speedtest"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.14",
-    "@types/mocha": "^8.0.3",
-    "@types/node": "^20.0.0",
-    "chai": "^4.2.0",
-    "concurrently": "^3.5.1",
-    "mocha": "^8.2.0",
-    "prettier": "^2.4.1",
+    "@types/chai": "^5.2.3",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.0.3",
+    "chai": "^6.2.2",
+    "concurrently": "^9.2.1",
+    "dotenv": "^17.2.3",
+    "mocha": "^11.7.5",
+    "prettier": "^3.7.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3",
-    "dotenv": "^16.4.5"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^10.1.0"
   }
 }
