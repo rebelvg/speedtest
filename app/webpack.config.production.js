@@ -16,6 +16,7 @@ _.forEach(parsed, (v, k) => {
 module.exports = {
   mode: 'production',
   entry: ['./index.tsx'],
+  devtool: false,
   module: {
     rules: [
       {
@@ -40,6 +41,7 @@ module.exports = {
   ],
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    alias: { react: 'preact/compat', 'react-dom': 'preact/compat' },
   },
   output: {
     filename: 'bundle.js',

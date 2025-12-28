@@ -33,6 +33,7 @@ module.exports = {
   devtool: 'source-map',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    alias: { react: 'preact/compat', 'react-dom': 'preact/compat' },
   },
   devServer: {
     host: '0.0.0.0',
