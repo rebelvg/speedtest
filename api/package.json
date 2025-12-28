@@ -12,8 +12,10 @@
     "lodash": "^4.17.5"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
+    "@sinonjs/fake-timers": "^15.1.0",
     "@types/cors": "^2.8.19",
-    "@types/lodash": "^4.17.21"
+    "@types/express": "^5.0.6",
+    "@types/lodash": "^4.17.21",
+    "@types/sinonjs__fake-timers": "^15.0.1"
   }
 }

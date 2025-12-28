@@ -1,8 +1,11 @@
+import * as FakeTimers from '@sinonjs/fake-timers';
 import { assert } from 'chai';
 import { Writable } from 'stream';
 import { CustomReadable } from './custom-readable';
 
 describe('CustomReadable integration test', () => {
+  let clock: FakeTimers.InstalledClock;
+
   class TestWritable extends Writable {
     public _write(
       chunk: Buffer,
@@ -14,7 +17,7 @@ describe('CustomReadable integration test', () => {
   }
 
   context('when CustomReadable simulated speed is not set', () => {
-    const fileSize = 30 * 1024 * 1024;
+    const fileSize = 32 * 1024 * 1024;
 
     let startTime: Date;
     let endTime: Date;
@@ -42,19 +45,27 @@ describe('CustomReadable integration test', () => {
     it('should read as expected', () => {
       const testTime = endTime.valueOf() - startTime.valueOf();
 
-      assert.isBelow(testTime, 1 * 1000);
+      assert.isBelow(testTime, 100);
     });
   });
 
   context('when CustomReadable simulated speed is set', function () {
-    const timeout = 10 * 1000;
-
-    this.timeout(timeout);
-
-    const fileSize = 1 * 1024 * 1024;
+    const fileSize = 32 * 1024 * 1024;
 
     let startTime: Date;
     let endTime: Date;
+
+    before(() => {
+      clock = FakeTimers.install({
+        toFake: ['setTimeout', 'Date'],
+      });
+
+      clock.setTickMode({ mode: 'nextAsync' });
+    });
+
+    after(() => {
+      clock.uninstall();
+    });
 
     before(async () => {
       startTime = new Date();
@@ -63,7 +74,7 @@ describe('CustomReadable integration test', () => {
 
       const readable = new CustomReadable({
         fileSize,
-        simulatedSpeedKBps: 128,
+        simulatedSpeedKbps: 128,
       });
 
       readable.pipe(writable);
@@ -80,8 +91,7 @@ describe('CustomReadable integration test', () => {
     it('should read as expected', () => {
       const testTime = endTime.valueOf() - startTime.valueOf();
 
-      assert.isAbove(testTime, 7 * 1000);
-      assert.isBelow(testTime, 10 * 1000);
+      assert.strictEqual(testTime, 2048000);
     });
   });
 });

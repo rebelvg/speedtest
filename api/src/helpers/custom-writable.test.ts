@@ -1,10 +1,13 @@
+import * as FakeTimers from '@sinonjs/fake-timers';
 import { assert } from 'chai';
 import { Readable } from 'stream';
 import { CustomWritable } from './custom-writable';
 
 describe('CustomWritable integration test', () => {
+  let clock: FakeTimers.InstalledClock;
+
   context('when CustomWritable simulated speed is not set', () => {
-    const fileSize = 30 * 1024 * 1024;
+    const fileSize = 32 * 1024 * 1024;
 
     let startTime: Date;
     let endTime: Date;
@@ -32,19 +35,27 @@ describe('CustomWritable integration test', () => {
     it('should write as expected', () => {
       const testTime = endTime.valueOf() - startTime.valueOf();
 
-      assert.isBelow(testTime, 1 * 1000);
+      assert.isBelow(testTime, 100);
     });
   });
 
   context('when CustomWritable simulated speed is set', function () {
-    const timeout = 10 * 1000;
-
-    this.timeout(timeout);
-
-    const fileSize = 1 * 1024 * 1024;
+    const fileSize = 32 * 1024 * 1024;
 
     let startTime: Date;
     let endTime: Date;
+
+    before(() => {
+      clock = FakeTimers.install({
+        toFake: ['setTimeout', 'Date'],
+      });
+
+      clock.setTickMode({ mode: 'nextAsync' });
+    });
+
+    after(() => {
+      clock.uninstall();
+    });
 
     before(async () => {
       startTime = new Date();
@@ -53,7 +64,7 @@ describe('CustomWritable integration test', () => {
 
       const writable = new CustomWritable({
         fileSize,
-        simulatedSpeedKBps: 128,
+        simulatedSpeedKbps: 128,
       });
 
       readable.pipe(writable);
@@ -70,8 +81,7 @@ describe('CustomWritable integration test', () => {
     it('should write as expected', () => {
       const testTime = endTime.valueOf() - startTime.valueOf();
 
-      assert.isAbove(testTime, 7 * 1000);
-      assert.isBelow(testTime, 10 * 1000);
+      assert.strictEqual(testTime, 2048000);
     });
   });
 });
