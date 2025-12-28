@@ -2,22 +2,18 @@ import { Readable } from 'stream';
 
 interface ICustomReadableOptions {
   fileSize: number;
-  simulatedSpeedKBps?: number;
+  simulatedSpeedKbps?: number;
 }
 
 export class CustomReadable extends Readable {
   private fileSize: number = 0;
-  private simulatedSpeedKBps: number = Infinity;
+  private simulatedSpeedKbps: number = Infinity;
 
-  constructor(options: ICustomReadableOptions) {
-    super({
-      highWaterMark: (options.simulatedSpeedKBps || 16) * 1024,
-    });
-
-    const { fileSize, simulatedSpeedKBps } = options;
+  constructor({ fileSize, simulatedSpeedKbps }: ICustomReadableOptions) {
+    super({});
 
     this.fileSize = fileSize;
-    this.simulatedSpeedKBps = simulatedSpeedKBps || Infinity;
+    this.simulatedSpeedKbps = simulatedSpeedKbps || Infinity;
   }
 
   private _pushBytes(bytes: number) {
@@ -32,10 +28,10 @@ export class CustomReadable extends Readable {
 
   public _read(bytes: number) {
     if (this.fileSize > 0) {
-      if (this.simulatedSpeedKBps === Infinity) {
+      if (this.simulatedSpeedKbps === Infinity) {
         this._pushBytes(bytes);
       } else {
-        const delay = ((bytes / this.simulatedSpeedKBps) * 1000) / 1024;
+        const delay = ((bytes / this.simulatedSpeedKbps) * 8 * 1000) / 1024;
 
         setTimeout(() => this._pushBytes(bytes), delay);
       }

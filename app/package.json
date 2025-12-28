@@ -2,8 +2,8 @@
   "name": "app",
   "version": "1.0.0",
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.config.production --mode production",
-    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack-dev-server --mode development"
+    "build": "webpack --config webpack.config.production --mode production",
+    "start": "webpack-dev-server --mode development"
   },
   "devDependencies": {
     "@types/react": "^19.2.7",
