@@ -1,4 +1,5 @@
 import { Writable } from 'stream';
+import { API } from '../config';
 
 interface ICustomWritableOptions {
   fileSize: number;
@@ -13,7 +14,10 @@ export class CustomWritable extends Writable {
     super({});
 
     this.fileSize = fileSize;
-    this.simulatedSpeedKbps = simulatedSpeedKbps || Infinity;
+
+    if (simulatedSpeedKbps && API.ENV === 'dev') {
+      this.simulatedSpeedKbps = simulatedSpeedKbps;
+    }
   }
 
   public _write(

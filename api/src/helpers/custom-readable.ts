@@ -1,4 +1,5 @@
 import { Readable } from 'stream';
+import { API } from '../config';
 
 interface ICustomReadableOptions {
   fileSize: number;
@@ -13,7 +14,10 @@ export class CustomReadable extends Readable {
     super({});
 
     this.fileSize = fileSize;
-    this.simulatedSpeedKbps = simulatedSpeedKbps || Infinity;
+
+    if (simulatedSpeedKbps && API.ENV === 'dev') {
+      this.simulatedSpeedKbps = simulatedSpeedKbps;
+    }
   }
 
   private _pushBytes(bytes: number) {

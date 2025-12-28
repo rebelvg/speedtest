@@ -30,7 +30,7 @@ router.get('/download/:size', rateLimitMiddleware, async (req, res, next) => {
 
   const readable = new CustomReadable({
     fileSize,
-    // simulatedSpeedKbps: 1024,
+    simulatedSpeedKbps: 1024,
   });
 
   readable.pipe(res);
