@@ -10,15 +10,15 @@ dotenv.config({
 });
 
 interface IEnv {
-  NODE_ENV: string | undefined;
   API_PORT: string | undefined;
   API_HOST: string | undefined;
+  SPEED_LIMIT: string | undefined;
 }
 
 export const env: IEnv = {
-  NODE_ENV: process.env.NODE_ENV,
   API_PORT: process.env.API_PORT,
   API_HOST: process.env.API_HOST,
+  SPEED_LIMIT: process.env.SPEED_LIMIT,
 };
 
 console.log(env);

@@ -15,7 +15,7 @@ export class CustomReadable extends Readable {
 
     this.fileSize = fileSize;
 
-    if (simulatedSpeedKbps && API.ENV === 'dev') {
+    if (simulatedSpeedKbps && API.SPEED_LIMIT) {
       this.simulatedSpeedKbps = simulatedSpeedKbps;
     }
   }
